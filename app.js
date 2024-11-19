@@ -4,6 +4,20 @@ const mysql = require('mysql2');
 const app = express();
 const port = 3000;
 
+// Cấu hình view engine là EJS
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+// Route cho trang chủ
+app.get('/', (req, res) => {
+    res.render('index');  // Render view 'index.ejs'
+});
+
+  // Route cho trang giới thiệu
+app.get('/about', (req, res) => {
+    res.render('about');  // Render view 'about.ejs'
+});
+
 // Import routes
 const thuocRoutes = require('./routes/thuocRoutes');
 
@@ -23,11 +37,6 @@ db.connect((err) => {
     } else {
         console.log('Kết nối đến MySQL thành công!');
     }
-});
-
-// Route cơ bản để kiểm tra
-app.get('/', (req, res) => {
-    res.send('Xin chào, ứng dụng đã kết nối với cơ sở dữ liệu MySQL!');
 });
 
 // Sử dụng routes
