@@ -8,6 +8,7 @@ NguoiDung.init(
     TenTaiKhoan: {
       type: DataTypes.TEXT,
       primaryKey: true,
+      unique: true,
     },
     MatKhau: {
       type: DataTypes.TEXT,
@@ -16,6 +17,7 @@ NguoiDung.init(
     Email: {
       type: DataTypes.TEXT,
       primaryKey: true,
+      unique: true,
     },
     SoDienThoai: {
       type: DataTypes.TEXT,

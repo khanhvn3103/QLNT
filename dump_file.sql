@@ -166,7 +166,9 @@ CREATE TABLE `nguoidung` (
   `ChucVu` int NOT NULL,
   `HoTen` varchar(100) NOT NULL,
   `DiaChi` varchar(200) NOT NULL,
-  PRIMARY KEY (`TenTaiKhoan`,`Email`)
+  PRIMARY KEY (`TenTaiKhoan`,`Email`),
+  UNIQUE KEY `Email_UNIQUE` (`Email`),
+  UNIQUE KEY `TenTaiKhoan_UNIQUE` (`TenTaiKhoan`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -197,6 +199,7 @@ CREATE TABLE `thuoc` (
   `GiaTien` float NOT NULL,
   `thuoccol` varchar(45) NOT NULL,
   PRIMARY KEY (`ThuocID`,`LoThuocID`),
+  UNIQUE KEY `ThuocID_UNIQUE` (`ThuocID`),
   KEY `LoThuocID` (`LoThuocID`),
   CONSTRAINT `thuoc_ibfk_1` FOREIGN KEY (`LoThuocID`) REFERENCES `lothuoc` (`LoThuocID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -221,4 +224,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-20 13:00:35
+-- Dump completed on 2024-11-21 15:25:24
