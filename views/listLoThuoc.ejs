@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Danh sách Lô Thuốc</title>
-    <link rel="stylesheet" href="/public/css/bootstrap.min.css" />
+    <!-- Đảm bảo đường dẫn đúng cho tệp CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
   </head>
 
   <body>
@@ -22,6 +23,7 @@
             required
           >
             <option value="">-- Chọn lô thuốc --</option>
+            <!-- Lặp qua danh sách lô thuốc để hiển thị -->
             <% lothuocs.forEach(function(loThuoc) { %>
             <option value="<%= loThuoc.LoThuocID %>">
               Lô <%= loThuoc.LoThuocID %> - Ngày nhập: <%= loThuoc.NgayNhap %>
@@ -50,6 +52,7 @@
           </tr>
         </thead>
         <tbody>
+          <!-- Lặp qua danh sách thuốc trong lô -->
           <% loThuocDetails.Thuocs.forEach(function(thuoc) { %>
           <tr>
             <td><%= thuoc.TenThuoc %></td>
@@ -65,6 +68,7 @@
       <% } %>
     </div>
 
-    <script src="/public/js/bootstrap.min.js"></script>
+    <!-- Đảm bảo đường dẫn đúng cho tệp JS -->
+    <script src="/js/bootstrap.min.js"></script>
   </body>
 </html>

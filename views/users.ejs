@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danh sách người dùng</title>
+  </head>
+  <body>
+    <h1><%= message %></h1>
+
+    <% if (error) { %>
+    <div style="color: red">
+      <p><%= error %></p>
+    </div>
+    <% } %>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Tên Tài Khoản</th>
+          <th>Email</th>
+          <th>Số Điện Thoại</th>
+          <th>Chức Vụ</th>
+          <th>Họ Tên</th>
+          <th>Địa Chỉ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(function(user) { %>
+        <tr>
+          <td><%= user.TenTaiKhoan %></td>
+          <td><%= user.Email %></td>
+          <td><%= user.SoDienThoai %></td>
+          <td><%= user.ChucVu %></td>
+          <td><%= user.HoTen %></td>
+          <td><%= user.DiaChi %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </body>
+</html>
