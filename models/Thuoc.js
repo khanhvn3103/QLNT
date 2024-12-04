@@ -35,7 +35,11 @@ Thuoc.init(
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    GiaTien: {
+    GiaTienNhap: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    GiaTienNBan: {
       type: DataTypes.FLOAT,
       allowNull: false,
     },

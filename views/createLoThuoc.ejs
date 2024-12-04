@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tạo Lô Thuốc</title>
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Tạo Lô Thuốc Mới</h2>
+      <form action="/LoThuoc/create" method="POST">
+        <div class="mb-3">
+          <label for="NgayNhap" class="form-label">Ngày Nhập</label>
+          <input
+            type="date"
+            class="form-control"
+            id="NgayNhap"
+            name="NgayNhap"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Tạo Lô Thuốc</button>
+      </form>
+
+      <h3 class="mt-5">Danh sách thuốc trong Lô Thuốc</h3>
+      <form id="addThuocForm">
+        <input type="hidden" id="LoThuocID" value="<%= loThuocID %>" />
+        <div class="mb-3">
+          <label for="TenThuoc" class="form-label">Tên Thuốc</label>
+          <input
+            type="text"
+            class="form-control"
+            id="TenThuoc"
+            name="TenThuoc"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="GiaTienNhap" class="form-label">Giá Tiền Nhập</label>
+          <input
+            type="number"
+            class="form-control"
+            id="GiaTienNhap"
+            name="GiaTienNhap"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="GiaTienNBan" class="form-label">Giá Tiền Bán</label>
+          <input
+            type="number"
+            class="form-control"
+            id="GiaTienNBan"
+            name="GiaTienNBan"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="SoLuong" class="form-label">Số Lượng</label>
+          <input
+            type="number"
+            class="form-control"
+            id="SoLuong"
+            name="SoLuong"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="HanSuDung" class="form-label">Hạn Sử Dụng</label>
+          <input
+            type="date"
+            class="form-control"
+            id="HanSuDung"
+            name="HanSuDung"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="NgaySanXuat" class="form-label">Ngày Sản Xuất</label>
+          <input
+            type="date"
+            class="form-control"
+            id="NgaySanXuat"
+            name="NgaySanXuat"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-success">Thêm Thuốc</button>
+      </form>
+
+      <button class="btn btn-primary mt-3" id="confirmButton">
+        Xác Nhận Lô Thuốc
+      </button>
+    </div>
+
+    <script src="/public/js/jquery-3.7.1.min.js"></script>
+    <script src="/public/js/bootstrap.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#addThuocForm").submit(function (e) {
+          e.preventDefault();
+          const data = $(this).serialize();
+          $.post("/LoThuoc/add-thuoc", data, function (response) {
+            alert(response.message);
+          });
+        });
+
+        $("#confirmButton").click(function () {
+          const loThuocID = $("#LoThuocID").val();
+          $.post("/LoThuoc/confirm", { LoThuocID }, function (response) {
+            alert("Lô Thuốc đã được xác nhận và lưu thành công!");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

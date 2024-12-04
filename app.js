@@ -1,19 +1,34 @@
 const express = require("express");
-const path = require("path");
 const app = express();
-const medicineRoutes = require("./routes/medicine"); // Nhập routes
+const path = require("path");
+const bodyParser = require("body-parser");
+const userRoutes = require("./routes/users");
+const LoThuocRoutes = require("./routes/LoThuocRoutes");
+const ThuocRoutes = require("./routes/ThuocRoutes");
 
-// Cấu hình view engine là EJS
+// Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Cấu hình EJS
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Cấu hình thư mục chứa tài nguyên tĩnh (CSS, JS, ảnh)
+// Cấu hình Static Files (nếu có tệp tĩnh như CSS, JS, images...)
 app.use(express.static(path.join(__dirname, "public")));
 
-// Sử dụng các route đã khai báo
-app.use("/", medicineRoutes);
+// Routes
+app.use("/users", userRoutes);
+app.use("/lothuoc", LoThuocRoutes);
+app.use("/thuoc", ThuocRoutes);
 
-// Khởi động server
-app.listen(3000, () => {
-  console.log("Server is running on http://localhost:3000/");
+// Middleware xử lý lỗi 404 (tùy chọn)
+app.use((req, res, next) => {
+  res.status(404).send("Không tìm thấy trang!");
+});
+
+// Start server
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

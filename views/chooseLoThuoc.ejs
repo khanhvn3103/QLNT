@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chọn Lô Thuốc</title>
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Chọn Lô Thuốc</h2>
+
+      <!-- Form chọn lô thuốc -->
+      <form action="/LoThuoc/details" method="GET">
+        <div class="mb-3">
+          <label for="LoThuocID" class="form-label">Chọn Lô Thuốc</label>
+          <select class="form-control" id="LoThuocID" name="LoThuocID" required>
+            <option value="" disabled selected>Chọn một lô thuốc</option>
+            <% lothuocs.forEach(function(loThuoc) { %>
+            <option value="<%= loThuoc.LoThuocID %>">
+              <%= loThuoc.LoThuocID %> - <%= loThuoc.NgayNhap %>
+            </option>
+            <% }); %>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Xem Thuốc</button>
+      </form>
+    </div>
+
+    <script src="/public/js/jquery-3.7.1.min.js"></script>
+    <script src="/public/js/bootstrap.min.js"></script>
+  </body>
+</html>
