@@ -1,7 +1,15 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize");
+const { Thuoc } = require("./Thuoc");
 
-class LoThuoc extends Model {}
+class LoThuoc extends Model {
+  static associate() {
+    LoThuoc.hasMany(Thuoc, {
+      foreignKey: "LoThuocID",
+      as: "ThuocList",
+    });
+  }
+}
 
 LoThuoc.init(
   {

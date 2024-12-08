@@ -1,8 +1,14 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize");
-const { LoThuoc } = require("./LoThuoc");
 
-class Thuoc extends Model {}
+class Thuoc extends Model {
+  static associate(models) {
+    Thuoc.belongsTo(models.LoThuoc, {
+      foreignKey: "LoThuocID",
+      as: "LoThuoc", // Alias cho quan hệ
+    });
+  }
+}
 
 Thuoc.init(
   {
@@ -13,11 +19,11 @@ Thuoc.init(
     LoThuocID: {
       type: DataTypes.INTEGER,
       references: {
-        model: LoThuoc,
-        key: "LoThuocID",
+        model: LoThuoc, // Tham chiếu tới model Medicine
+        key: "LoThuocID", // Khóa chính của model Medicine
       },
       primaryKey: true,
-      allowNull: false,
+      allowNull: false, // Không cho phép giá trị NULL
     },
     HanSuDung: {
       type: DataTypes.DATEONLY,
@@ -52,4 +58,5 @@ Thuoc.init(
     timestamps: false,
   }
 );
+
 module.exports = { Thuoc };
