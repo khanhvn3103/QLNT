@@ -13,11 +13,11 @@ Thuoc.init(
     LoThuocID: {
       type: DataTypes.INTEGER,
       references: {
-        model: LoThuoc, // Tham chiếu tới model Medicine
-        key: "LoThuocID", // Khóa chính của model Medicine
+        model: LoThuoc,
+        key: "LoThuocID",
       },
       primaryKey: true,
-      allowNull: false, // Không cho phép giá trị NULL
+      allowNull: false,
     },
     HanSuDung: {
       type: DataTypes.DATEONLY,
@@ -39,16 +39,17 @@ Thuoc.init(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    GiaTienNBan: {
+    GiaTienBan: {
+      // Sửa lại từ GiaTienNBan thành GiaTienBan
       type: DataTypes.FLOAT,
       allowNull: false,
     },
   },
   {
     sequelize,
-    modelName: "Thuoc", // Tên của model
-    tableName: "thuoc", // Tên của bảng trong cơ sở dữ liệu
-    timestamps: false, // Không sử dụng timestamps (createdAt và updatedAt)
+    modelName: "Thuoc",
+    tableName: "thuoc",
+    timestamps: false,
   }
 );
 module.exports = { Thuoc };

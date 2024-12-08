@@ -13,11 +13,12 @@ HoaDon.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    LoThuocID: {
-      type: DataTypes.INTEGER,
+    TenTaiKhoan: {
+      // Sửa lại từ LoThuocID thành TenTaiKhoan
+      type: DataTypes.TEXT,
       references: {
-        model: NguoiDung, // Tham chiếu tới model Medicine
-        key: "TenTaiKhoan", // Khóa chính của model Medicine
+        model: NguoiDung,
+        key: "TenTaiKhoan",
       },
       allowNull: false,
     },
@@ -28,15 +29,15 @@ HoaDon.init(
     MaGiamGiaID: {
       type: DataTypes.TEXT,
       references: {
-        model: MaGiamGia, // Tham chiếu tới model Medicine
-        key: "MaGiamGiaID", // Khóa chính của model Medicine
+        model: MaGiamGia,
+        key: "MaGiamGiaID",
       },
     },
     SoDienThoai: {
       type: DataTypes.TEXT,
       references: {
-        model: KhachHang, // Tham chiếu tới model Medicine
-        key: "SoDienThoai", // Khóa chính của model Medicine
+        model: KhachHang,
+        key: "SoDienThoai",
       },
       allowNull: false,
     },
@@ -47,9 +48,9 @@ HoaDon.init(
   },
   {
     sequelize,
-    modelName: "HoaDon", // Tên của model
-    tableName: "hoadon", // Tên của bảng trong cơ sở dữ liệu
-    timestamps: false, // Không sử dụng timestamps (createdAt và updatedAt)
+    modelName: "HoaDon",
+    tableName: "hoadon",
+    timestamps: false,
   }
 );
 module.exports = { HoaDon };
