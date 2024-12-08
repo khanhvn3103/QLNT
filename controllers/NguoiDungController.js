@@ -2,146 +2,132 @@ const { NguoiDung } = require("../models/NguoiDung");
 const { Op } = require("sequelize");
 const sequelize = require("../config/sequelize/index");
 
-// list user
-const listUsers = async (req, res) => {
-  try {
-    // Lấy danh sách người dùng từ cơ sở dữ liệu, loại trừ mật khẩu
-    const listUsers = await NguoiDung.findAll({
-      attributes: {
-        exclude: ["MatKhau"], // Không lấy trường MatKhau
-      },
-      order: [["HoTen"]], // Sắp xếp theo tên người dùng
-    });
-
-    // Render trang với dữ liệu danh sách người dùng
-    res.render("users", {
-      users: listUsers,
-      message: "Danh sách người dùng",
-      error: null,
-    });
-  } catch (err) {
-    // Nếu có lỗi, render trang với thông báo lỗi
-    res.render("users", {
-      users: [],
-      message: "Không thể lấy danh sách người dùng",
-      error: err.message,
-    });
-  }
-};
-
-const showLoginForm = (req, res) => {
-  console.log("Rendering login form");
-  res.render("login", { error: null });
-};
-
-const handleLogin = async (req, res) => {
-  const { TenTaiKhoan, MatKhau } = req.body;
-
-  try {
-    // Tìm người dùng trong cơ sở dữ liệu theo tên tài khoản
-    const user = await NguoiDung.findOne({
-      where: { TenTaiKhoan },
-    });
-
-    // Kiểm tra nếu tài khoản không tồn tại
-    if (!user) {
-      console.log("Tài khoản không tồn tại");
-      return res.render("login", { error: "Tài khoản không tồn tại." });
-    }
-
-    // So sánh mật khẩu người dùng nhập vào với mật khẩu lưu trong cơ sở dữ liệu
-    console.log(`Mật khẩu người dùng nhập vào: ${MatKhau}`);
-    console.log(`Mật khẩu trong cơ sở dữ liệu: ${user.MatKhau}`);
-
-    // Nếu mật khẩu không khớp
-    if (MatKhau !== user.MatKhau) {
-      console.log("Sai mật khẩu");
-      return res.render("login", { error: "Sai mật khẩu." });
-    }
-
-    // Lưu thông tin người dùng vào session sau khi đăng nhập thành công
-    req.session.user = {
-      TenTaiKhoan: user.TenTaiKhoan,
-      HoTen: user.HoTen,
-      ChucVu: user.ChucVu,
-    };
-
-    // Chuyển hướng đến trang người dùng
-    res.redirect("/users");
-  } catch (error) {
-    console.error(error);
-    res.render("login", { error: "Đã xảy ra lỗi. Vui lòng thử lại." });
-  }
-};
-
-const logout = (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/login");
+// list user api
+const listUsers = (req, res) => {
+  const getUsers = NguoiDung.findAll({
+    attributes: ["TenTaiKhoan"],
+    order: [["TenTaiKhoan"]],
+    // include: [
+    //   {
+    //     model: NguoiDung,
+    //     attributes: ["TenTaiKhoan"], // Chọn thuộc tính bạn muốn hiển thị
+    // where: {
+    //   TenTaiKhoan: {
+    //     [Op.ne]: "a", // Loại bỏ các imgUnBgURL bằng 'a'
+    //   },
+    // },
+    // },
+    // ],
   });
+  getUsers
+    .then((listUsers) => {
+      // const paginatedResult = pagination.paginate(listUsers, page, itemsPerPage);
+      return res.json({
+        success: true,
+        data: listUsers,
+        message: "List All User Success",
+      });
+    })
+    .catch((err) => {
+      return res.json({
+        success: false,
+        error: err.message,
+        message: "List All User Fail",
+      });
+    });
 };
 
-//tạo tài khoản
-const addUser = async (data) => {
-  const { TenTaiKhoan, MatKhau, Email, SoDienThoai, ChucVu, HoTen, DiaChi } =
-    data;
+// get thông tin của 1 userID
+const getUserInfo = (req, res) => {
+  const userID = req.params.TenTaiKhoan;
+  User.findByPk(userID, {
+    attributes: { exclude: ["MatKhau"] }, // Loại bỏ trường "password" trong kết quả trả về
+    // include: [
+    //   {
+    //     model: ImageUser,
+    //     attributes: ["imgUnBgURL"], // Chọn thuộc tính bạn muốn hiển thị
+    //   },
+    // ],
+  })
+    .then((user) => {
+      // Kiểm tra nếu không tìm thấy người dùng
+      if (!user) {
+        return res.json({
+          success: false,
+          data: null,
+          message: "User not found",
+        });
+      }
 
-  try {
-    // Kiểm tra nếu tên tài khoản đã tồn tại
-    const existingUserByUsername = await NguoiDung.findOne({
-      where: { TenTaiKhoan },
+      // Trả về thông tin người dùng
+      return res.json({
+        success: true,
+        data: user,
+        message: "Get User Success",
+      });
+    })
+    .catch((err) => {
+      return res.json({
+        success: false,
+        error: err.message,
+        message: "Get User Fail",
+      });
     });
-    if (existingUserByUsername) {
-      throw new Error("Tên tài khoản đã tồn tại.");
-    }
+};
 
-    // Kiểm tra nếu email đã tồn tại
-    const existingUserByEmail = await NguoiDung.findOne({
-      where: { Email },
-    });
-    if (existingUserByEmail) {
-      throw new Error("Email đã được sử dụng.");
-    }
+//list roles của 1 userID
+const getUserRoles = (req, res) => {
+  const userID = req.params.TenTaiKhoan;
 
-    // Kiểm tra nếu số điện thoại có định dạng hợp lệ
-    const phoneRegex = /^[0-9]{10,15}$/; // Định dạng số điện thoại (10-15 chữ số)
-    if (!phoneRegex.test(SoDienThoai)) {
-      throw new Error("Số điện thoại không hợp lệ.");
-    }
-
-    // Kiểm tra nếu chức vụ là số và có giá trị hợp lệ
-    if (isNaN(ChucVu) || ChucVu < 0) {
-      throw new Error("Chức vụ không hợp lệ.");
-    }
-
-    // Thêm người dùng vào cơ sở dữ liệu
-    const newUser = await NguoiDung.create({
-      TenTaiKhoan,
-      MatKhau,
-      Email,
-      SoDienThoai,
-      ChucVu,
-      HoTen,
-      DiaChi,
-    });
-
-    return {
-      success: true,
-      data: newUser,
-      message: "Thêm nhân viên thành công!",
-    };
-  } catch (error) {
-    return {
+  // Kiểm tra đầu vào (nếu cần)
+  if (!userID) {
+    return res.json({
       success: false,
-      error: error.message, // Trả về thông báo lỗi cụ thể
-      message: "Thêm nhân viên thất bại!",
-    };
+      data: null,
+      message: "UserID is required",
+    });
   }
+
+  sequelize
+    .query(
+      `SELECT TenTaiKhoan, ChucVu
+      FROM nguoidung
+      WHERE TenTaiKhoan = ? AND ChucVu = 1`, // Truy vấn tham số hóa
+      {
+        replacements: [userID], // Truyền giá trị an toàn
+        model: NguoiDung,
+        mapToModel: true, // Ánh xạ kết quả về model NguoiDung
+      }
+    )
+    .then((roleUser) => {
+      // Kiểm tra nếu danh sách rỗng
+      if (!roleUser || roleUser.length === 0) {
+        return res.json({
+          success: false,
+          data: null,
+          message: "User Role not found",
+        });
+      }
+
+      // Trả về thông tin người dùng
+      return res.json({
+        success: true,
+        data: roleUser,
+        message: "Get Role User Success",
+      });
+    })
+    .catch((err) => {
+      // Xử lý lỗi
+      return res.json({
+        success: false,
+        error: err.message,
+        message: "Get Role User Fail",
+      });
+    });
 };
 
 module.exports = {
   listUsers,
-  showLoginForm,
-  handleLogin,
-  logout,
-  addUser,
+  getUserInfo,
+  getUserRoles,
 };

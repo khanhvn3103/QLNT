@@ -1,33 +1,32 @@
 const { LoThuoc } = require("../models/LoThuoc");
 const { Thuoc } = require("../models/Thuoc");
+const { Op } = require("sequelize");
 const sequelize = require("../config/sequelize");
 
 // 1. Tạo lô thuốc mới
 const createLoThuoc = async (req, res) => {
-  const { NgayNhap, ThuocList } = req.body;
-
-  if (!NgayNhap || isNaN(new Date(NgayNhap).getTime())) {
+  const { NgayNhap, ThuocList } = req.body; // Nhận danh sách thuốc từ request
+  if (!NgayNhap || !Array.isArray(ThuocList) || ThuocList.length === 0) {
     return res.json({
       success: false,
-      message: "Ngày nhập không hợp lệ",
+      message: "Ngày nhập và danh sách thuốc không được để trống",
     });
   }
 
-  if (!Array.isArray(ThuocList) || ThuocList.length === 0) {
-    return res.json({
-      success: false,
-      message: "Danh sách thuốc không được để trống",
-    });
-  }
-
-  const transaction = await sequelize.transaction();
+  const transaction = await sequelize.transaction(); // Tạo transaction để đảm bảo toàn vẹn dữ liệu
   try {
+    // Tạo lô thuốc mới
     const newLoThuoc = await LoThuoc.create(
-      { NgayNhap, TongTien: 0 },
+      {
+        NgayNhap,
+        TongTien: 0, // Tổng tiền sẽ cập nhật sau
+      },
       { transaction }
     );
 
     let totalCost = 0;
+
+    // Thêm từng thuốc vào lô
     for (const thuoc of ThuocList) {
       const {
         TenThuoc,
@@ -65,16 +64,17 @@ const createLoThuoc = async (req, res) => {
       );
     }
 
+    // Cập nhật tổng tiền của lô thuốc
     await newLoThuoc.update({ TongTien: totalCost }, { transaction });
 
-    await transaction.commit();
+    await transaction.commit(); // Lưu toàn bộ thay đổi
     res.json({
       success: true,
       data: newLoThuoc,
       message: "Tạo lô thuốc thành công",
     });
   } catch (error) {
-    await transaction.rollback();
+    await transaction.rollback(); // Hoàn tác nếu xảy ra lỗi
     res.json({
       success: false,
       error: error.message,
@@ -87,16 +87,14 @@ const createLoThuoc = async (req, res) => {
 const getLoThuocDetails = async (req, res) => {
   const { LoThuocID } = req.params;
 
-  if (!LoThuocID) {
-    return res.json({
-      success: false,
-      message: "ID lô thuốc không được để trống",
-    });
-  }
-
   try {
     const loThuoc = await LoThuoc.findByPk(LoThuocID, {
-      include: [{ model: Thuoc, as: "ThuocList" }],
+      include: [
+        {
+          model: Thuoc,
+          as: "ThuocList", // Tên alias nếu có định nghĩa quan hệ trong models
+        },
+      ],
     });
 
     if (!loThuoc) {
@@ -208,7 +206,9 @@ const finalizeLoThuoc = async (req, res) => {
       0
     );
 
-    await loThuoc.update({ TongTien: totalCost });
+    await loThuoc.update({
+      TongTien: totalCost,
+    });
 
     res.json({
       success: true,
@@ -224,80 +224,10 @@ const finalizeLoThuoc = async (req, res) => {
   }
 };
 
-// 6. Lấy tất cả thuốc
-const getAllThuoc = async (req, res) => {
-  try {
-    const allThuoc = await Thuoc.findAll({
-      include: [
-        {
-          model: LoThuoc,
-          as: "LoThuoc",
-          attributes: ["LoThuocID", "NgayNhap", "TongTien"],
-        },
-      ],
-    });
-
-    if (allThuoc.length === 0) {
-      return res.json({
-        success: true,
-        data: [],
-        message: "Không có thuốc nào trong danh sách",
-      });
-    }
-
-    res.json({
-      success: true,
-      data: allThuoc,
-      message: "Lấy danh sách thuốc thành công",
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      error: error.message,
-      message: "Lấy danh sách thuốc thất bại",
-    });
-  }
-};
-
-// 7. Lấy danh sách lô thuốc
-const getListLoThuoc = async (req, res) => {
-  try {
-    const loThuocList = await LoThuoc.findAll({
-      include: [
-        {
-          model: Thuoc,
-          as: "ThuocList",
-          attributes: [
-            "ThuocID",
-            "TenThuoc",
-            "SoLuong",
-            "HanSuDung",
-            "GiaTienNhap",
-          ],
-        },
-      ],
-    });
-
-    res.json({
-      success: true,
-      data: loThuocList,
-      message: "Lấy danh sách lô thuốc thành công",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Lỗi khi lấy danh sách lô thuốc",
-      error: error.message,
-    });
-  }
-};
-
 module.exports = {
   createLoThuoc,
   getLoThuocDetails,
   updateThuocInLo,
   deleteThuocFromLo,
   finalizeLoThuoc,
-  getAllThuoc,
-  getListLoThuoc,
 };

@@ -1,14 +1,8 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize");
+const { LoThuoc } = require("./LoThuoc");
 
-class Thuoc extends Model {
-  static associate(models) {
-    Thuoc.belongsTo(models.LoThuoc, {
-      foreignKey: "LoThuocID",
-      as: "LoThuoc", // Alias cho quan hệ
-    });
-  }
-}
+class Thuoc extends Model {}
 
 Thuoc.init(
   {
@@ -53,10 +47,9 @@ Thuoc.init(
   },
   {
     sequelize,
-    modelName: "Thuoc",
-    tableName: "thuoc",
-    timestamps: false,
+    modelName: "Thuoc", // Tên của model
+    tableName: "thuoc", // Tên của bảng trong cơ sở dữ liệu
+    timestamps: false, // Không sử dụng timestamps (createdAt và updatedAt)
   }
 );
-
 module.exports = { Thuoc };
