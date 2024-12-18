@@ -80,6 +80,6 @@ INSERT INTO `chitiethd` (`ThuocID`, `HoaDonID`, `SoLuong`, `DonGia`) VALUES
 (4, 1, 4, 12000);
 
 -- Chèn dữ liệu giả cho bảng `magiamgia`
-INSERT INTO `magiamgia` (`MaGiamGiaID`, `GiamGia`) VALUES
-('DISCOUNT10', 10.0),
-('DISCOUNT20', 20.0);
+INSERT INTO `magiamgia` (`MaGiamGiaID`, `beginAt` , `endAt`, `GiamGia`) VALUES
+('VOUCHER1', '2023-12-01', '2025-01-01', 10),
+('VOUCHER2', '2024-01-01', '2025-02-01', 20);

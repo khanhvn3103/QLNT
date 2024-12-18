@@ -10,9 +10,9 @@ const app = express();
 const NguoiDungRoutes = require("./routes/NguoiDungRoutes");
 const thuocLoThuocRoutes = require("./routes/ThuocLoThuocRoutes"); // Router hợp nhất cho lô thuốc và thuốc
 const canhBaoRoutes = require("./routes/CanhBaoRoutes");
-// const maGiamGiaRoutes = require("./routes/MaGiamGiaRoutes");
+const maGiamGiaRoutes = require("./routes/MaGiamGiaRoutes");
 // const hoaDonRoutes = require("./routes/HoaDonRoutes");
-// const khachHangRoutes = require("./routes/KhachHangRoutes");
+const khachHangRoutes = require("./routes/KhachHangRoutes");
 // const banHangRoutes = require("./routes/BanHangRoutes");
 
 // Middleware cho bodyParser
@@ -50,9 +50,9 @@ app.get("/", (req, res) => {
 app.use("/nguoidung", NguoiDungRoutes);
 app.use("/thuoclo", thuocLoThuocRoutes); // Sử dụng router hợp nhất cho lô thuốc và thuốc
 app.use("/canhbao", canhBaoRoutes);
-// app.use("/magiamgia", maGiamGiaRoutes);
+app.use("/magiamgia", maGiamGiaRoutes);
 // app.use("/hoadon", hoaDonRoutes);
-// app.use("/khachhang", khachHangRoutes);
+app.use("/khachhang", khachHangRoutes);
 // app.use("/banhang", banHangRoutes);
 
 // Middleware xử lý lỗi 404 (tùy chọn)

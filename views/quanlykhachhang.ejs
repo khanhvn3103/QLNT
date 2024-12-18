@@ -19,214 +19,69 @@
       rel="stylesheet"
       href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
     />
-    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div>
-      <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-brand">
-        <h1><span class="lab la-accusoft"></span> Medicine</h1>
-      </div>
-      <div class="sidebar-menu">
-        <ul>
-          
-            <li>
-              <a href="/canhbaohansudung.html"
-                ><span class="icon"><i class="fa-solid fa-business-time"></i></span>
-                <span>Cảnh báo hạn sử dụng</span>
-              </a>
-            </li>
-            <li>
-              <a href="/user.html"
-                ><span class="icon"><i class="fa-solid fa-user"></i></span>
-                <span>Quản lý người dùng</span>
-              </a>
-            </li>
-            <li>
-              <a href="/quanlylothuoc.html"
-                ><span class="icon"><i class="fa-solid fa-parachute-box"></i></span>
-                <span>Quản lý lô thuốc</span>
-              </a>
-            </li>
-            <li>
-              <a href="/quanlythuoc.html"
-                ><span class="icon"><i class="fa-solid fa-tablets"></i></span>
-                <span>Quản lý thuốc</span>
-              </a>
-            </li>
-            <li>
-              <a href="/quanlyhoadon.html"
-                ><span class="icon"><i class="fa-regular fa-money-bill-1"></i></span>
-                <span>Quản lý hóa đơn</span>
-              </a>
-            </li>
-            <li>
-              <a href="/quanlykhachhang.html"
-                ><span class="icon"><i class="fa-solid fa-users"></i></span>
-                <span>Quản lý khách hàng</span>
-              </a>
-            </li>
-          </ul>
-      </div>
-    </div>
-  
-      <!-- Content Area -->
-      <div class="content">
-        <header>
-          <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="#">Quản lý khách hàng</a>
-              <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav"
-                aria-controls="navbarNav"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                  <li class="nav-item">
-                    <button class="btn btn-exit" type="button">Đăng xuất</button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
-        </header>
+    <!-- Sidebar -->
+    <%- include('sidebar')%>
 
-        <!-- Nút thêm lô thuốc -->
-        <main>
-            <div class="container">
-                <div class="mb-3 text-end">
-                    <button
-                      class="btn btn-custom"
-                      data-bs-toggle="modal"
-                      data-bs-target="#addModal"
-                    >
-                      Thêm khách hàng
-                    </button>
-                  </div>
-          
-                  <!-- Bảng Lô Thuốc -->
-                  <table class="table" id="medicine-table">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Số điện thoại</th>
-                        <th>Họ tên</th>
-                        <th>Điểm</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- Dữ liệu lô thuốc sẽ hiển thị tại đây -->
-                      <tr>
-                        <td>1</td>
-                        <td>0353381967</td>
-                        <td>Huỳnh Tấn Lực</td>
-                        <td>200</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>0387837256</td>
-                        <td>Lê Văn Lợi</td>
-                        <td>350</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>0353381967</td>
-                        <td>Nguyễn Hoàng Bảo Đăng</td>
-                        <td>700</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>0353381967</td>
-                        <td>Hồ Văn Nam</td>
-                        <td>0</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>0281736139</td>
-                        <td>Võ Thị Hoa</td>
-                        <td>50</td>
-                      </tr>
-                      <!-- Các dòng dữ liệu khác sẽ được thêm vào tương tự -->
-                    </tbody>
-                  </table>
-                </div>
-          
-                <!-- Modal Thêm Lô Thuốc -->
-                <div
-                  class="modal fade"
-                  id="addModal"
-                  tabindex="-1"
-                  aria-labelledby="addModalLabel"
-                  aria-hidden="true"
-                >
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header text-end mb-3">
-                        <h5 class="modal-title" id="addModalLabel">Thêm khách hàng</h5>
-                        <button
-                          type="button"
-                          class="btn-close"
-                          data-bs-dismiss="modal"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                      <div class="modal-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="medicineName" class="form-label"
-                              >Số điện thoại</label
-                            >
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="medicineName"
-                              required
-                            />
-                          </div>
-                          <div class="mb-3">
-                            <label for="quantity" class="form-label">Họ tên</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="medicineName"
-                              required
-                            />
-                          </div>
-                          <div class="mb-3">
-                            <label for="quantity" class="form-label">Điểm</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="medicineName"
-                              required
-                            />
-                          </div>
-                        </form>
-                      </div>
-                      <div class="modal-footer">
-                        <button
-                          type="button"
-                          class="btn btn-secondary"
-                          data-bs-dismiss="modal"
-                        >
-                          Đóng
-                        </button>
-                        <button type="button" class="btn btn-primary">Lưu</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <!-- Content Area -->
+    <div class="content">
+      <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Quản lý khách hàng</a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <button class="btn btn-exit" type="button">Đăng xuất</button>
+                </li>
+              </ul>
             </div>
-        </main>
+          </div>
+        </nav>
+      </header>
+      <main>
+        <div class="container">
+          <!-- Bảng Lô Thuốc -->
+          <table class="table mt-5" id="medicine-table">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Số điện thoại</th>
+                <th>Họ tên</th>
+                <th>Điểm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (listKhachHang.length > 0) { %> <%
+              listKhachHang.forEach(function(khachhang, index) { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= khachhang.SoDienThoai %></td>
+                <td><%= khachhang.HoTen %></td>
+                <td><%= khachhang.Diem %></td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td colspan="4">Không có khách hàng nào</td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
 
     <!-- Bootstrap JS và Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

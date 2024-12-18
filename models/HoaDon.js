@@ -18,7 +18,6 @@ HoaDon.init(
         key: "TenTaiKhoan",
       },
       allowNull: false,
-      onDelete: "CASCADE",
     },
     NgayBan: {
       type: DataTypes.DATE,

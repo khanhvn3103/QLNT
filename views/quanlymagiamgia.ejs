@@ -14,7 +14,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
       rel="stylesheet"
     />
-    <!-- Line Awesome --> 
+    <!-- Line Awesome -->
     <link
       rel="stylesheet"
       href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
@@ -23,55 +23,8 @@
   </head>
 
   <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-brand">
-        <h1><span class="lab la-accusoft"></span> Medicine</h1>
-      </div>
-      <div class="sidebar-menu">
-        <ul>
-          
-          <li>
-            <a href="#"
-              ><span class="icon"><i class="fa-solid fa-business-time"></i></span>
-              <span>Cảnh báo hạn sử dụng</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"
-              ><span class="icon"><i class="fa-solid fa-user"></i></span>
-              <span>Quản lý người dùng</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"
-              ><span class="icon"><i class="fa-solid fa-parachute-box"></i></span>
-              <span>Quản lý lô thuốc</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"
-              ><span class="icon"><i class="fa-solid fa-tablets"></i></span>
-              <span>Quản lý thuốc</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"
-              ><span class="icon"><i class="fa-regular fa-money-bill-1"></i></span>
-              <span>Quản lý hóa đơn</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"
-              ><span class="icon"><i class="fa-solid fa-users"></i></span>
-              <span>Quản lý khách hàng</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <%- include('sidebar')%>
 
-    <!-- Content Area -->
     <div class="content">
       <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -101,153 +54,194 @@
 
       <main>
         <div class="container">
-            <div class="mb-3 text-end">
+          <div class="mb-3 text-end">
+            <button
+              class="btn btn-custom"
+              data-bs-toggle="modal"
+              data-bs-target="#addModal"
+            >
+              Thêm voucher
+            </button>
+          </div>
+
+          <table class="table" id="medicine-table">
+            <thead>
+              <tr>
+                <th>Mã voucher</th>
+                <th>ngày bắt đầu</th>
+                <th>ngày kết thúc</th>
+                <th>Giá trị giảm(%)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (listvouchers.length > 0) { %> <%
+              listvouchers.forEach((voucher) => { %>
+              <tr>
+                <th scope="row"><%= voucher.MaGiamGiaID %></th>
+                <td><%= voucher.beginAt %></td>
+                <td><%= voucher.endAt %></td>
+                <td><%= voucher.GiamGia %></td>
+                <td>
+                  <button
+                    class="btn btn-danger handle-xoavoucher"
+                    data-MaGiamGiaID="<%= voucher.MaGiamGiaID %>"
+                  >
+                    Xóa
+                  </button>
+                </td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td colspan="5">Không có mã giảm giá nào</td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Modal Thêm Lô Thuốc -->
+        <div
+          class="modal fade"
+          id="addModal"
+          tabindex="-1"
+          aria-labelledby="addModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header text-end mb-3">
+                <h5 class="modal-title" id="addModalLabel">Thêm voucher</h5>
                 <button
-                  class="btn btn-custom"
-                  data-bs-toggle="modal"
-                  data-bs-target="#addModal"
-                >
-                  Thêm voucher
-                </button>
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
-      
-              <!-- Bảng Lô Thuốc -->
-              <table class="table" id="medicine-table">
-                <thead>
-                  <tr>
-                    <th>Mã voucher</th>
-                    <th>ngày bắt đầu</th>
-                    <th>ngày kết thúc</th>
-                    <th>Giá trị giảm(%)</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Dữ liệu lô thuốc sẽ hiển thị tại đây -->
-                  <tr>
-                    <td>SALE50</td>
-                    <td>15/12/2024</td>
-                    <td>20/12/2024</td>
-                    <td>50</td>
-                    <td><button class="handle-xoavoucher">Xóa</button></td>
-                  </tr>
-                  <tr>
-                    <td>NEWYEAR30</td>
-                    <td>25/12/2024</td>
-                    <td>05/01/2025</td>
-                    <td>30</td>
-                    <td><button class="handle-xoavoucher">Xóa</button></td>
-                  </tr>
-                  <tr>
-                    <td>TET100K</td>
-                    <td>10/01/2025</td>
-                    <td>30/01/2025</td>
-                    <td>30</td>
-                    <td><button class="handle-xoavoucher">Xóa</button></td>
-                  </tr>
-                  <tr>
-                    <td>FREESHIP2024</td>
-                    <td>01/12/2024</td>
-                    <td>31/12/2024</td>
-                    <td>20</td>
-                    <td><button class="handle-xoavoucher">Xóa</button></td>
-                  </tr>
-                  <tr>
-                    <td>FLASH20</td>
-                    <td>20/12/2024</td>
-                    <td>20/12/2024</td>
-                    <td>15</td>
-                    <td><button class="handle-xoavoucher">Xóa</button></td>
-                  </tr>
-                  
-                  </tr>
-                  <!-- Các dòng dữ liệu khác sẽ được thêm vào tương tự -->
-                </tbody>
-              </table>
-            </div>
-      
-            <!-- Modal Thêm Lô Thuốc -->
-            <div
-              class="modal fade"
-              id="addModal"
-              tabindex="-1"
-              aria-labelledby="addModalLabel"
-              aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header text-end mb-3">
-                    <h5 class="modal-title" id="addModalLabel">Thêm voucher</h5>
-                    <button
-                      type="button"
-                      class="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
-                  </div>
-                  <div class="modal-body">
-                    <form>
-                      <div class="mb-3">
-                        <label for="medicineName" class="form-label"
-                          >Mã voucher</label
-                        >
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="medicineName"
-                          placeholder="Mã voucher"
-                          required
-                        />
-                      </div>
-                      <div class="mb-3">
-                        <label for="quantity" class="form-label">ngày bắt đầu</label>
-                        <input
-                          type="date"
-                          class="form-control"
-                          id="medicineName"
-                          required
-                        />
-                      </div>
-                      <div class="mb-3">
-                        <label for="quantity" class="form-label">Ngày kết thúc</label>
-                        <input
-                          type="date"
-                          class="form-control"
-                          id="medicineName"
-                          required
-                        />
-                      </div>
-                      <div class="mb-3">
-                        <label for="quantity" class="form-label">Giá trị giảm(%)</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="medicineName"
-                          placeholder="Giá trị giảm(%)"
-                          required
-                        />
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-bs-dismiss="modal"
+              <div class="modal-body">
+                <form id="addVoucherForm">
+                  <div class="mb-3">
+                    <label for="quantity" class="form-label"
+                      >ngày bắt đầu</label
                     >
-                      Đóng
-                    </button>
-                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <input
+                      type="date"
+                      name="beginAt"
+                      class="form-control"
+                      id="medicineName"
+                      required
+                    />
                   </div>
-                </div>
+                  <div class="mb-3">
+                    <label for="quantity" class="form-label"
+                      >Ngày kết thúc</label
+                    >
+                    <input
+                      type="date"
+                      name="endAt"
+                      class="form-control"
+                      id="medicineName"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="quantity" class="form-label"
+                      >Giá trị giảm(%)</label
+                    >
+                    <input
+                      type="number"
+                      name="GiamGia"
+                      class="form-control"
+                      id="medicineName"
+                      placeholder="Giá trị giảm(%)"
+                      required
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary">Lưu</button>
+                </form>
               </div>
             </div>
           </div>
         </div>
-    </main>
+      </main>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Xử lý thêm voucher
+        document
+          .getElementById("addVoucherForm")
+          .addEventListener("submit", (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            console.log("Adding voucher:", data);
+
+            fetch("/magiamgia/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            })
+              .then((response) => response.json())
+              .then((result) => {
+                console.log("Add voucher response:", result);
+                if (result.success) {
+                  alert("Thêm voucher thành công");
+                  location.reload(); // Tải lại trang để cập nhật danh sách voucher
+                } else {
+                  alert(result.message);
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          });
+
+        // Xử lý xóa voucher
+        document.querySelectorAll(".handle-xoavoucher").forEach((button) => {
+          button.addEventListener("click", () => {
+            const MaGiamGiaID = button.dataset.magiamgiaid; // Lấy giá trị MaGiamGiaID từ data attribute
+            console.log("MaGiamGiaID:", MaGiamGiaID);
+            if (!MaGiamGiaID) {
+              console.error("MaGiamGiaID is not defined for this button");
+              alert("Không tìm thấy mã giảm giá, vui lòng thử lại.");
+              return;
+            }
+
+            if (confirm("Bạn có chắc chắn muốn xóa mã giảm giá này không?")) {
+              console.log("Deleting voucher with MaGiamGiaID:", MaGiamGiaID);
+
+              fetch(`/magiamgia/${MaGiamGiaID}`, {
+                // Đảm bảo đường dẫn chính xác
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              })
+                .then((response) => response.json())
+                .then((result) => {
+                  console.log("Delete voucher response:", result);
+                  if (result.success) {
+                    alert("Xóa mã giảm giá thành công");
+                    location.reload(); // Tải lại trang để cập nhật danh sách
+                  } else {
+                    alert(result.message);
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>

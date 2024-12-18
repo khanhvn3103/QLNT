@@ -16,70 +16,20 @@
       rel="stylesheet"
       href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
     />
-    <link rel="stylesheet" href="/css/sidebar.css" />
     <link rel="stylesheet" href="/css/canhbao.css" />
   </head>
 
   <body>
     <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-brand">
-        <h1><span class="lab la-accusoft"></span> Medicine</h1>
-      </div>
-      <div class="sidebar-menu">
-        <ul>
-          <li>
-            <a href="#"
-              ><span class="icon"
-                ><i class="fa-solid fa-business-time"></i
-              ></span>
-              <span>Cảnh báo hạn sử dụng</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"
-              ><span class="icon"><i class="fa-solid fa-user"></i></span>
-              <span>Quản lý người dùng</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"
-              ><span class="icon"
-                ><i class="fa-solid fa-parachute-box"></i
-              ></span>
-              <span>Quản lý lô thuốc</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"
-              ><span class="icon"><i class="fa-solid fa-tablets"></i></span>
-              <span>Quản lý thuốc</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"
-              ><span class="icon"
-                ><i class="fa-regular fa-money-bill-1"></i
-              ></span>
-              <span>Quản lý hóa đơn</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"
-              ><span class="icon"><i class="fa-solid fa-users"></i></span>
-              <span>Quản lý khách hàng</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
+    <%- include('sidebar')%>
     <!-- Content Area -->
     <div class="content">
       <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container-fluid">
-            <a class="navbar-brand" href="#">Quản lý người dùng</a>
+            <a class="navbar-brand" href="#"
+              >Danh Sách Thuốc Hết Hạn và Gần Hết Hạn</a
+            >
             <button
               class="navbar-toggler"
               type="button"
@@ -103,10 +53,7 @@
       </header>
 
       <main>
-        <div class="container-hsdthuoc">
-          <header>
-            <h1>Danh Sách Thuốc Hết Hạn và Gần Hết Hạn</h1>
-          </header>
+        <div class="container-hsdthuoc mt-5">
           <main>
             <section>
               <h2>Thuốc Đã Hết Hạn</h2>

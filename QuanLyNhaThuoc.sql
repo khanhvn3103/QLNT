@@ -54,17 +54,15 @@ CREATE TABLE `nguoidung` (
 -- Tạo bảng `hoadon` với ràng buộc ON DELETE CASCADE
 CREATE TABLE `hoadon` (
   `HoaDonID` int NOT NULL AUTO_INCREMENT,
-  `TenTaiKhoan` varchar(50) NOT NULL,
+  `TenTaiKhoan` varchar(50) NULL,
   `NgayBan` date NOT NULL,
   `MaGiamGiaID` varchar(50) DEFAULT NULL,
   `SoDienThoai` varchar(15) NOT NULL,
   `TongTien` float NOT NULL,
   PRIMARY KEY (`HoaDonID`),
-  KEY `TenTaiKhoan` (`TenTaiKhoan`),
   KEY `MaGiamGiaID` (`MaGiamGiaID`),
   KEY `SoDienThoai` (`SoDienThoai`),
-  CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`TenTaiKhoan`) REFERENCES `nguoidung` (`TenTaiKhoan`) ON DELETE CASCADE,
-  CONSTRAINT `hoadon_ibfk_3` FOREIGN KEY (`SoDienThoai`) REFERENCES `khachhang` (`SoDienThoai`)
+  CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`SoDienThoai`) REFERENCES `khachhang` (`SoDienThoai`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Tạo bảng `chitiethd`
@@ -82,6 +80,8 @@ CREATE TABLE `chitiethd` (
 -- Tạo bảng `magiamgia`
 CREATE TABLE `magiamgia` (
   `MaGiamGiaID` varchar(50) NOT NULL,
+  `beginAt` date NULL DEFAULT NULL,
+  `endAt` date NULL DEFAULT NULL,
   `GiamGia` float NOT NULL,
   PRIMARY KEY (`MaGiamGiaID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

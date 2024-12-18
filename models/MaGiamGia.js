@@ -9,6 +9,14 @@ MaGiamGia.init(
       type: DataTypes.TEXT,
       primaryKey: true,
     },
+    beginAt: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    endAt: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
     GiamGia: {
       type: DataTypes.FLOAT,
       allowNull: false,

@@ -17,61 +17,10 @@
       href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
     />
     <link rel="stylesheet" href="/css/nguoidung.css" />
-    <link rel="stylesheet" href="/css/sidebar.css" />
   </head>
 
   <body>
-    <div class="sidebar">
-      <div class="sidebar-brand">
-        <h1><span class="lab la-accusoft"></span> Medicine</h1>
-      </div>
-      <div class="sidebar-menu">
-        <ul>
-          <li>
-            <a href="/canhbaohansudung.html"
-              ><span class="icon"
-                ><i class="fa-solid fa-business-time"></i
-              ></span>
-              <span>Cảnh báo hạn sử dụng</span></a
-            >
-          </li>
-          <li>
-            <a href="/user.html"
-              ><span class="icon"><i class="fa-solid fa-user"></i></span>
-              <span>Quản lý người dùng</span></a
-            >
-          </li>
-          <li>
-            <a href="/quanlylothuoc.html"
-              ><span class="icon"
-                ><i class="fa-solid fa-parachute-box"></i
-              ></span>
-              <span>Quản lý lô thuốc</span></a
-            >
-          </li>
-          <li>
-            <a href="/quanlythuoc.html"
-              ><span class="icon"><i class="fa-solid fa-tablets"></i></span>
-              <span>Quản lý thuốc</span></a
-            >
-          </li>
-          <li>
-            <a href="/quanlyhoadon.html"
-              ><span class="icon"
-                ><i class="fa-regular fa-money-bill-1"></i
-              ></span>
-              <span>Quản lý hóa đơn</span></a
-            >
-          </li>
-          <li>
-            <a href="/quanlykhachhang.html"
-              ><span class="icon"><i class="fa-solid fa-users"></i></span>
-              <span>Quản lý khách hàng</span></a
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
+    <%- include('sidebar')%>
 
     <div class="content">
       <header>
@@ -102,7 +51,7 @@
 
       <main>
         <div class="container">
-          <div class="mb-3 text-end">
+          <div class="mb-3 text-end mt-5">
             <button
               class="btn btn-user btn-primary"
               data-bs-toggle="modal"
@@ -111,7 +60,7 @@
               Thêm Người Dùng
             </button>
           </div>
-          <table class="table table-striped">
+          <table class="table table-striped mt-5">
             <thead>
               <tr>
                 <th scope="col">STT</th>
@@ -120,7 +69,7 @@
                 <th scope="col">Email</th>
                 <th scope="col">Địa Chỉ</th>
                 <th scope="col">Chức Vụ</th>
-                <th scope="col">Hành động</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -216,23 +165,23 @@
                     />
                   </div>
                   <div class="mb-3">
-                    <label for="username" class="form-label"
+                    <label for="TenTaiKhoan" class="form-label"
                       >Tên đăng nhập</label
                     >
                     <input
                       type="text"
                       class="form-control"
                       id="username"
-                      name="username"
+                      name="TenTaiKhoan"
                       required
                     />
                   </div>
                   <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="MatKhau" class="form-label">Password</label>
                     <input
                       type="password"
                       class="form-control"
-                      name="password"
+                      name="MatKhau"
                       id="password"
                       required
                     />
@@ -322,11 +271,11 @@
                     />
                   </div>
                   <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="MatKhau" class="form-label">Password</label>
                     <input
                       type="password"
                       class="form-control"
-                      name="password"
+                      name="MatKhau"
                       id="editpassword"
                     />
                   </div>
@@ -375,7 +324,7 @@
           const data = Object.fromEntries(formData);
           console.log("Adding user:", data);
 
-          fetch("/nguoidung", {
+          fetch("/nguoidung/", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -415,7 +364,7 @@
                 document.getElementById("editSoDienThoai").value =
                   user.SoDienThoai;
                 document.getElementById("editEmail").value = user.Email;
-                document.getElementById("editpassword").value = user.MatKhau; // Để trống mật khẩu khi sửa
+                document.getElementById("editpassword").value = ""; // Để trống mật khẩu khi sửa
                 document.getElementById("editDiaChi").value = user.DiaChi;
                 document.getElementById("editChucVu").value = user.ChucVu;
 
@@ -425,6 +374,7 @@
                     event.preventDefault();
                     const formData = new FormData(event.target);
                     const data = Object.fromEntries(formData);
+                    console.log(data.password);
 
                     // Kiểm tra xem trường mật khẩu có bị để trống không
                     if (!data.password) {

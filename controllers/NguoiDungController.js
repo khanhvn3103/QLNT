@@ -1,7 +1,7 @@
 const { NguoiDung } = require("../models/NguoiDung");
 const { Op } = require("sequelize");
 const sequelize = require("../config/sequelize/index");
-
+const bcrypt = require("bcrypt");
 // List user API
 const listUsers = (req, res) => {
   NguoiDung.findAll({
@@ -152,13 +152,6 @@ const showUserManagementPage = (req, res) => {
 const addUser = async (req, res) => {
   const { TenTaiKhoan, MatKhau, Email, SoDienThoai, ChucVu, HoTen, DiaChi } =
     req.body;
-  console.log("Received TenTaiKhoan:", TenTaiKhoan);
-  console.log("Received MatKhau:", MatKhau);
-  console.log("Received Email:", Email);
-  console.log("Received SoDienThoai:", SoDienThoai);
-  console.log("Received ChucVu:", ChucVu);
-  console.log("Received HoTen:", HoTen);
-  console.log("Received DiaChi:", DiaChi);
 
   try {
     const newUser = await NguoiDung.create({
@@ -228,7 +221,10 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const { TenTaiKhoan } = req.params;
   try {
-    // Xóa người dùng sẽ tự động xóa các bản ghi trong bảng hóa đơn liên quan do ON DELETE CASCADE
+    // Ngắt liên kết các hóa đơn với tài khoản người dùng trước khi xóa người dùng
+    await HoaDon.update({ TenTaiKhoan: null }, { where: { TenTaiKhoan } });
+
+    // Xóa người dùng
     const result = await NguoiDung.destroy({ where: { TenTaiKhoan } });
 
     if (result) {
