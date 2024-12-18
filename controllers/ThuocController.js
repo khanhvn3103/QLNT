@@ -3,9 +3,9 @@ const { Thuoc } = require("../models/Thuoc");
 const { Op } = require("sequelize");
 const sequelize = require("../config/sequelize");
 
-// 1. Tạo lô thuốc mới
+// Tạo lô thuốc mới
 const createLoThuoc = async (req, res) => {
-  const { NgayNhap, ThuocList } = req.body; // Nhận danh sách thuốc từ request
+  const { NgayNhap, ThuocList } = req.body;
   if (!NgayNhap || !Array.isArray(ThuocList) || ThuocList.length === 0) {
     return res.json({
       success: false,
@@ -13,13 +13,13 @@ const createLoThuoc = async (req, res) => {
     });
   }
 
-  const transaction = await sequelize.transaction(); // Tạo transaction để đảm bảo toàn vẹn dữ liệu
+  const transaction = await sequelize.transaction();
   try {
     // Tạo lô thuốc mới
     const newLoThuoc = await LoThuoc.create(
       {
         NgayNhap,
-        TongTien: 0, // Tổng tiền sẽ cập nhật sau
+        TongTien: 0,
       },
       { transaction }
     );
@@ -67,14 +67,14 @@ const createLoThuoc = async (req, res) => {
     // Cập nhật tổng tiền của lô thuốc
     await newLoThuoc.update({ TongTien: totalCost }, { transaction });
 
-    await transaction.commit(); // Lưu toàn bộ thay đổi
+    await transaction.commit();
     res.json({
       success: true,
       data: newLoThuoc,
       message: "Tạo lô thuốc thành công",
     });
   } catch (error) {
-    await transaction.rollback(); // Hoàn tác nếu xảy ra lỗi
+    await transaction.rollback();
     res.json({
       success: false,
       error: error.message,
@@ -83,7 +83,7 @@ const createLoThuoc = async (req, res) => {
   }
 };
 
-// 2. Hiển thị chi tiết lô thuốc
+// Hiển thị chi tiết lô thuốc
 const getLoThuocDetails = async (req, res) => {
   const { LoThuocID } = req.params;
 
@@ -92,7 +92,7 @@ const getLoThuocDetails = async (req, res) => {
       include: [
         {
           model: Thuoc,
-          as: "ThuocList", // Tên alias nếu có định nghĩa quan hệ trong models
+          as: "ThuocList",
         },
       ],
     });
@@ -118,7 +118,7 @@ const getLoThuocDetails = async (req, res) => {
   }
 };
 
-// 3. Chỉnh sửa số lượng thuốc trong lô
+// Chỉnh sửa số lượng thuốc trong lô
 const updateThuocInLo = async (req, res) => {
   const { ThuocID } = req.params;
   const { SoLuong } = req.body;
@@ -156,7 +156,7 @@ const updateThuocInLo = async (req, res) => {
   }
 };
 
-// 4. Xóa thuốc khỏi lô
+// Xóa thuốc khỏi lô
 const deleteThuocFromLo = async (req, res) => {
   const { ThuocID } = req.params;
 
@@ -185,7 +185,7 @@ const deleteThuocFromLo = async (req, res) => {
   }
 };
 
-// 5. Xác nhận lưu lô thuốc
+// Xác nhận lưu lô thuốc
 const finalizeLoThuoc = async (req, res) => {
   const { LoThuocID } = req.params;
 
@@ -224,10 +224,62 @@ const finalizeLoThuoc = async (req, res) => {
   }
 };
 
+// Hàm để lấy danh sách thuốc đã hết hạn và sắp hết hạn
+const getCanhBaoHanSuDung = async (req, res) => {
+  const currentDate = new Date();
+  const warningDate = new Date();
+  warningDate.setMonth(warningDate.getMonth() + 6); // Cảnh báo trước 6 tháng
+
+  try {
+    const thuocDaHetHan = await Thuoc.findAll({
+      where: {
+        HanSuDung: {
+          [Op.lt]: currentDate,
+        },
+      },
+    });
+
+    const thuocSapHetHan = await Thuoc.findAll({
+      where: {
+        HanSuDung: {
+          [Op.between]: [currentDate, warningDate],
+        },
+      },
+    });
+
+    res.render("canhbaohansudung", { thuocDaHetHan, thuocSapHetHan });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
+
+// Hàm mới để lấy danh sách tất cả lô thuốc
+const getListLoThuoc = async (req, res) => {
+  try {
+    const loThuoc = await LoThuoc.findAll();
+    res.json(loThuoc);
+  } catch (error) {
+    res.status(500).send("Có lỗi xảy ra khi lấy danh sách lô thuốc.");
+  }
+};
+
+// Hàm mới để lấy tất cả thuốc
+const getAllThuoc = async (req, res) => {
+  try {
+    const thuoc = await Thuoc.findAll();
+    res.json(thuoc);
+  } catch (error) {
+    res.status(500).send("Có lỗi xảy ra khi lấy danh sách thuốc.");
+  }
+};
+
 module.exports = {
   createLoThuoc,
   getLoThuocDetails,
   updateThuocInLo,
   deleteThuocFromLo,
   finalizeLoThuoc,
+  getCanhBaoHanSuDung,
+  getListLoThuoc,
+  getAllThuoc,
 };

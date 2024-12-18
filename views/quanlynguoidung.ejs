@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
+    />
+    <link rel="stylesheet" href="/css/nguoidung.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <div class="sidebar-brand">
+        <h1><span class="lab la-accusoft"></span> Medicine</h1>
+      </div>
+      <div class="sidebar-menu">
+        <ul>
+          <li>
+            <a href="/canhbaohansudung.html"
+              ><span class="icon"
+                ><i class="fa-solid fa-business-time"></i
+              ></span>
+              <span>Cảnh báo hạn sử dụng</span></a
+            >
+          </li>
+          <li>
+            <a href="/user.html"
+              ><span class="icon"><i class="fa-solid fa-user"></i></span>
+              <span>Quản lý người dùng</span></a
+            >
+          </li>
+          <li>
+            <a href="/quanlylothuoc.html"
+              ><span class="icon"
+                ><i class="fa-solid fa-parachute-box"></i
+              ></span>
+              <span>Quản lý lô thuốc</span></a
+            >
+          </li>
+          <li>
+            <a href="/quanlythuoc.html"
+              ><span class="icon"><i class="fa-solid fa-tablets"></i></span>
+              <span>Quản lý thuốc</span></a
+            >
+          </li>
+          <li>
+            <a href="/quanlyhoadon.html"
+              ><span class="icon"
+                ><i class="fa-regular fa-money-bill-1"></i
+              ></span>
+              <span>Quản lý hóa đơn</span></a
+            >
+          </li>
+          <li>
+            <a href="/quanlykhachhang.html"
+              ><span class="icon"><i class="fa-solid fa-users"></i></span>
+              <span>Quản lý khách hàng</span></a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content">
+      <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Quản lý người dùng</a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <button class="btn btn-exit" type="button">Đăng xuất</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <div class="container">
+          <div class="mb-3 text-end">
+            <button
+              class="btn btn-user btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#addModal"
+            >
+              Thêm Người Dùng
+            </button>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Họ Tên</th>
+                <th scope="col">Số Điện Thoại</th>
+                <th scope="col">Email</th>
+                <th scope="col">Địa Chỉ</th>
+                <th scope="col">Chức Vụ</th>
+                <th scope="col">Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (users && users.length > 0) { %> <% users.forEach((user,
+              index) => { %>
+              <tr>
+                <th scope="row"><%= index + 1 %></th>
+                <td><%= user.HoTen %></td>
+                <td><%= user.SoDienThoai %></td>
+                <td><%= user.Email %></td>
+                <td><%= user.DiaChi %></td>
+                <td>
+                  <% if (user.ChucVu === 1) { %> Quản Trị Viên <% } else { %>
+                  Nhân viên <% } %>
+                </td>
+
+                <td>
+                  <button
+                    class="btn btn-warning handle-suauser"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editmodal"
+                    data-userid="<%= user.TenTaiKhoan %>"
+                  >
+                    Sửa
+                  </button>
+                  <button
+                    class="btn btn-danger handle-xoauser"
+                    data-userid="<%= user.TenTaiKhoan %>"
+                  >
+                    Xóa
+                  </button>
+                </td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td colspan="7">Không có người dùng nào</td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          class="modal fade"
+          id="addModal"
+          tabindex="-1"
+          aria-labelledby="addModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Thêm Người Dùng</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form id="addUserForm">
+                  <div class="mb-3">
+                    <label for="HoTen" class="form-label">Họ Tên</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="HoTen"
+                      name="HoTen"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="SoDienThoai" class="form-label"
+                      >Số Điện Thoại</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="SoDienThoai"
+                      name="SoDienThoai"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="Email" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="Email"
+                      name="Email"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="username" class="form-label"
+                      >Tên đăng nhập</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="username"
+                      name="username"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      name="password"
+                      id="password"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="DiaChi" class="form-label">Địa Chỉ</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="DiaChi"
+                      name="DiaChi"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="ChucVu" class="form-label">Chức Vụ</label>
+                    <select
+                      class="form-select"
+                      id="ChucVu"
+                      name="ChucVu"
+                      required
+                    >
+                      <option value="1">Quản Trị Viên</option>
+                      <option value="2">Nhân Viên</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    Thêm Người Dùng
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal sửa người dùng -->
+        <div
+          class="modal fade"
+          id="editmodal"
+          tabindex="-1"
+          aria-labelledby="editModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Sửa Người Dùng</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form id="editUserForm">
+                  <div class="mb-3">
+                    <label for="HoTen" class="form-label">Họ Tên</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="editHoTen"
+                      name="HoTen"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="SoDienThoai" class="form-label"
+                      >Số Điện Thoại</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="editSoDienThoai"
+                      name="SoDienThoai"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="Email" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="editEmail"
+                      name="Email"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      name="password"
+                      id="editpassword"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="DiaChi" class="form-label">Địa Chỉ</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="editDiaChi"
+                      name="DiaChi"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="ChucVu" class="form-label">Chức Vụ</label>
+                    <select
+                      class="form-select"
+                      id="editChucVu"
+                      name="ChucVu"
+                      required
+                    >
+                      <option value="1">Quản Trị Viên</option>
+                      <option value="2">Nhân Viên</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Sửa</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Xử lý thêm người dùng
+      document
+        .getElementById("addUserForm")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          const formData = new FormData(event.target);
+          const data = Object.fromEntries(formData);
+          console.log("Adding user:", data);
+
+          fetch("/nguoidung", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((result) => {
+              console.log("Add user response:", result);
+              if (result.success) {
+                alert("Thêm người dùng thành công");
+                location.reload(); // Tải lại trang để cập nhật danh sách người dùng
+              } else {
+                alert(result.message);
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+
+      // Xử lý sửa người dùng
+      document.querySelectorAll(".handle-suauser").forEach((button) => {
+        button.addEventListener("click", () => {
+          const userId = button.dataset.userid;
+
+          // Lấy thông tin người dùng từ server
+          fetch(`/nguoidung/${userId}`)
+            .then((response) => response.json())
+            .then((result) => {
+              console.log("Get user info response:", result);
+              if (result.success) {
+                const user = result.data;
+
+                // Điền thông tin người dùng vào form sửa
+                document.getElementById("editHoTen").value = user.HoTen;
+                document.getElementById("editSoDienThoai").value =
+                  user.SoDienThoai;
+                document.getElementById("editEmail").value = user.Email;
+                document.getElementById("editpassword").value = user.MatKhau; // Để trống mật khẩu khi sửa
+                document.getElementById("editDiaChi").value = user.DiaChi;
+                document.getElementById("editChucVu").value = user.ChucVu;
+
+                document
+                  .getElementById("editUserForm")
+                  .addEventListener("submit", (event) => {
+                    event.preventDefault();
+                    const formData = new FormData(event.target);
+                    const data = Object.fromEntries(formData);
+
+                    // Kiểm tra xem trường mật khẩu có bị để trống không
+                    if (!data.password) {
+                      delete data.password; // Xóa trường mật khẩu nếu để trống
+                    }
+
+                    console.log("Updating user:", data);
+
+                    fetch(`/nguoidung/${userId}`, {
+                      method: "PUT",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(data),
+                    })
+                      .then((response) => response.json())
+                      .then((result) => {
+                        console.log("Update user response:", result);
+                        if (result.success) {
+                          alert("Sửa người dùng thành công");
+                          location.reload(); // Tải lại trang để cập nhật danh sách người dùng
+                        } else {
+                          alert(result.message);
+                        }
+                      })
+                      .catch((error) => {
+                        console.error("Error:", error);
+                      });
+                  });
+              } else {
+                alert(result.message);
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+      });
+
+      // Xử lý xóa người dùng
+      document.querySelectorAll(".handle-xoauser").forEach((button) => {
+        button.addEventListener("click", () => {
+          const userId = button.dataset.userid;
+
+          if (confirm("Bạn có chắc chắn muốn xóa người dùng này không?")) {
+            console.log("Deleting user:", userId);
+
+            fetch(`/nguoidung/${userId}`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => response.json())
+              .then((result) => {
+                console.log("Delete user response:", result);
+                if (result.success) {
+                  alert("Xóa người dùng thành công");
+                  location.reload(); // Tải lại trang để cập nhật danh sách người dùng
+                } else {
+                  alert(result.message);
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          }
+        });
+      });
+    });
+  </script>
+</html>

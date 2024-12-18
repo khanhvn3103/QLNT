@@ -2,26 +2,13 @@ const { NguoiDung } = require("../models/NguoiDung");
 const { Op } = require("sequelize");
 const sequelize = require("../config/sequelize/index");
 
-// list user api
+// List user API
 const listUsers = (req, res) => {
-  const getUsers = NguoiDung.findAll({
+  NguoiDung.findAll({
     attributes: ["TenTaiKhoan"],
     order: [["TenTaiKhoan"]],
-    // include: [
-    //   {
-    //     model: NguoiDung,
-    //     attributes: ["TenTaiKhoan"], // Chọn thuộc tính bạn muốn hiển thị
-    // where: {
-    //   TenTaiKhoan: {
-    //     [Op.ne]: "a", // Loại bỏ các imgUnBgURL bằng 'a'
-    //   },
-    // },
-    // },
-    // ],
-  });
-  getUsers
+  })
     .then((listUsers) => {
-      // const paginatedResult = pagination.paginate(listUsers, page, itemsPerPage);
       return res.json({
         success: true,
         data: listUsers,
@@ -37,20 +24,13 @@ const listUsers = (req, res) => {
     });
 };
 
-// get thông tin của 1 userID
+// Get thông tin của 1 userID
 const getUserInfo = (req, res) => {
   const userID = req.params.TenTaiKhoan;
-  User.findByPk(userID, {
-    attributes: { exclude: ["MatKhau"] }, // Loại bỏ trường "password" trong kết quả trả về
-    // include: [
-    //   {
-    //     model: ImageUser,
-    //     attributes: ["imgUnBgURL"], // Chọn thuộc tính bạn muốn hiển thị
-    //   },
-    // ],
+  NguoiDung.findByPk(userID, {
+    attributes: { exclude: ["MatKhau"] }, // Loại bỏ trường "MatKhau" trong kết quả trả về
   })
     .then((user) => {
-      // Kiểm tra nếu không tìm thấy người dùng
       if (!user) {
         return res.json({
           success: false,
@@ -58,8 +38,6 @@ const getUserInfo = (req, res) => {
           message: "User not found",
         });
       }
-
-      // Trả về thông tin người dùng
       return res.json({
         success: true,
         data: user,
@@ -75,11 +53,10 @@ const getUserInfo = (req, res) => {
     });
 };
 
-//list roles của 1 userID
+// List roles của 1 userID
 const getUserRoles = (req, res) => {
   const userID = req.params.TenTaiKhoan;
 
-  // Kiểm tra đầu vào (nếu cần)
   if (!userID) {
     return res.json({
       success: false,
@@ -91,16 +68,15 @@ const getUserRoles = (req, res) => {
   sequelize
     .query(
       `SELECT TenTaiKhoan, ChucVu
-      FROM nguoidung
-      WHERE TenTaiKhoan = ? AND ChucVu = 1`, // Truy vấn tham số hóa
+    FROM nguoidung
+    WHERE TenTaiKhoan = ? AND ChucVu = 1`,
       {
-        replacements: [userID], // Truyền giá trị an toàn
+        replacements: [userID],
         model: NguoiDung,
-        mapToModel: true, // Ánh xạ kết quả về model NguoiDung
+        mapToModel: true,
       }
     )
     .then((roleUser) => {
-      // Kiểm tra nếu danh sách rỗng
       if (!roleUser || roleUser.length === 0) {
         return res.json({
           success: false,
@@ -108,8 +84,6 @@ const getUserRoles = (req, res) => {
           message: "User Role not found",
         });
       }
-
-      // Trả về thông tin người dùng
       return res.json({
         success: true,
         data: roleUser,
@@ -117,7 +91,6 @@ const getUserRoles = (req, res) => {
       });
     })
     .catch((err) => {
-      // Xử lý lỗi
       return res.json({
         success: false,
         error: err.message,
@@ -126,8 +99,166 @@ const getUserRoles = (req, res) => {
     });
 };
 
+// Hiển thị form đăng nhập
+const showLoginForm = (req, res) => {
+  res.render("login", { error: null });
+};
+
+// Xử lý đăng nhập
+const handleLogin = (req, res) => {
+  const { TenTaiKhoan, MatKhau } = req.body;
+  NguoiDung.findOne({
+    where: {
+      TenTaiKhoan,
+      MatKhau, // Đối với mật khẩu bạn nên sử dụng cơ chế hash để bảo mật
+    },
+  })
+    .then((user) => {
+      if (!user) {
+        return res.render("login", {
+          error: "Tên tài khoản hoặc mật khẩu không đúng",
+        });
+      }
+      req.session.user = user;
+      res.redirect("/");
+    })
+    .catch((err) => {
+      return res.render("login", { error: err.message });
+    });
+};
+
+// Xử lý đăng xuất
+const logout = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.json({ success: false, message: "Đăng xuất thất bại" });
+    }
+    res.redirect("/login");
+  });
+};
+
+// Hiển thị trang quản lý người dùng
+const showUserManagementPage = (req, res) => {
+  NguoiDung.findAll()
+    .then((users) => {
+      res.render("quanlynguoidung", { users });
+    })
+    .catch((err) => {
+      res.render("quanlynguoidung", { error: err.message });
+    });
+};
+
+// Thêm người dùng
+const addUser = async (req, res) => {
+  const { TenTaiKhoan, MatKhau, Email, SoDienThoai, ChucVu, HoTen, DiaChi } =
+    req.body;
+  console.log("Received TenTaiKhoan:", TenTaiKhoan);
+  console.log("Received MatKhau:", MatKhau);
+  console.log("Received Email:", Email);
+  console.log("Received SoDienThoai:", SoDienThoai);
+  console.log("Received ChucVu:", ChucVu);
+  console.log("Received HoTen:", HoTen);
+  console.log("Received DiaChi:", DiaChi);
+
+  try {
+    const newUser = await NguoiDung.create({
+      TenTaiKhoan,
+      MatKhau, // Đối với mật khẩu bạn nên sử dụng cơ chế hash để bảo mật
+      Email,
+      SoDienThoai,
+      ChucVu,
+      HoTen,
+      DiaChi,
+    });
+    res.status(201).json({
+      success: true,
+      data: newUser,
+      message: "Thêm người dùng thành công",
+    });
+  } catch (error) {
+    console.error("Error during user creation:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Thêm người dùng thất bại",
+      error: error.message,
+    });
+  }
+};
+
+// Cập nhật người dùng
+const updateUser = async (req, res) => {
+  const { TenTaiKhoan } = req.params;
+  const { MatKhau, Email, SoDienThoai, ChucVu, HoTen, DiaChi } = req.body;
+
+  try {
+    const user = await NguoiDung.findOne({ where: { TenTaiKhoan } });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Người dùng không tồn tại",
+      });
+    }
+
+    if (MatKhau) {
+      user.MatKhau = MatKhau; // Chỉ cập nhật mật khẩu nếu có giá trị mới
+    }
+    user.Email = Email;
+    user.SoDienThoai = SoDienThoai;
+    user.ChucVu = ChucVu;
+    user.HoTen = HoTen;
+    user.DiaChi = DiaChi;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      data: user,
+      message: "Cập nhật người dùng thành công",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Cập nhật người dùng thất bại",
+      error: error.message,
+    });
+  }
+};
+
+// Xóa người dùng
+const deleteUser = async (req, res) => {
+  const { TenTaiKhoan } = req.params;
+  try {
+    // Xóa người dùng sẽ tự động xóa các bản ghi trong bảng hóa đơn liên quan do ON DELETE CASCADE
+    const result = await NguoiDung.destroy({ where: { TenTaiKhoan } });
+
+    if (result) {
+      res
+        .status(200)
+        .json({ success: true, message: "Xóa người dùng thành công" });
+    } else {
+      res
+        .status(404)
+        .json({ success: false, message: "Người dùng không tồn tại" });
+    }
+  } catch (error) {
+    console.error("Error during user deletion:", error.message); // In ra lỗi chi tiết
+    res.status(500).json({
+      success: false,
+      message: "Lỗi server khi xóa người dùng",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   listUsers,
   getUserInfo,
   getUserRoles,
+  showLoginForm,
+  handleLogin,
+  logout,
+  showUserManagementPage,
+  addUser,
+  updateUser,
+  deleteUser,
 };

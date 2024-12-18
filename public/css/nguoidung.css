@@ -1,0 +1,32 @@
+/* Content Area */
+.content {
+  margin-left: 250px;
+  padding: 20px;
+}
+
+.navbar {
+  padding: 1rem;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
+.container {
+  margin-top: 30px;
+}
+.modal-header,
+.modal-footer {
+  background-color: #f1f1f1;
+}
+
+table th,
+table td {
+  text-align: center; /* Căn giữa nội dung */
+  vertical-align: middle; /* Căn giữa theo chiều dọc */
+  padding: 15px; /* Tăng khoảng cách trên và dưới */
+}
+
+table th {
+  background-color: #f8f9fa; /* Màu nền header */
+}

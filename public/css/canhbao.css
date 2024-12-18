@@ -1,0 +1,61 @@
+.content {
+  margin-left: 250px;
+  padding: 20px;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+.navbar {
+  padding: 1rem;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
+.sidebar-brand h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.table th,
+.table td {
+  text-align: center;
+}
+
+.modal-title {
+  margin-left: 100px;
+}
+
+.container-hsdthuoc {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+  padding-top: 20px;
+}
+
+.container-hsdthuoc {
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.container-hsdthuoc header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.container-hsdthuoc header h1 {
+  color: #ff4d4d;
+}
+
+.scrollable-table {
+  max-height: 250px;
+  overflow-y: auto;
+}

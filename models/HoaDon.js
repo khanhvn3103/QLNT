@@ -1,8 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize");
-const { NguoiDung } = require("./NguoiDung");
-const { KhachHang } = require("./khachhang");
-const { MaGiamGia } = require("./MaGiamGia");
+const { NguoiDung } = require("./NguoiDung"); // Import model NguoiDung
 
 class HoaDon extends Model {}
 
@@ -14,31 +12,24 @@ HoaDon.init(
       primaryKey: true,
     },
     TenTaiKhoan: {
-      // Sửa lại từ LoThuocID thành TenTaiKhoan
       type: DataTypes.TEXT,
       references: {
         model: NguoiDung,
         key: "TenTaiKhoan",
       },
       allowNull: false,
+      onDelete: "CASCADE",
     },
     NgayBan: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     MaGiamGiaID: {
       type: DataTypes.TEXT,
-      references: {
-        model: MaGiamGia,
-        key: "MaGiamGiaID",
-      },
+      allowNull: true,
     },
     SoDienThoai: {
       type: DataTypes.TEXT,
-      references: {
-        model: KhachHang,
-        key: "SoDienThoai",
-      },
       allowNull: false,
     },
     TongTien: {
@@ -53,4 +44,5 @@ HoaDon.init(
     timestamps: false,
   }
 );
+
 module.exports = { HoaDon };

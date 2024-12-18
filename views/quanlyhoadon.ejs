@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuanLyHoaDon</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Line Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Quanlyhoadon</title>
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-brand">
+        <h1><span class="lab la-accusoft"></span> Medicine</h1>
+      </div>
+      <div class="sidebar-menu">
+        <ul>
+          <li>
+            <a href="/canhbaohansudung.html"
+              ><span class="icon"
+                ><i class="fa-solid fa-business-time"></i
+              ></span>
+              <span>Cảnh báo hạn sử dụng</span>
+            </a>
+          </li>
+          <li>
+            <a href="/user.html"
+              ><span class="icon"><i class="fa-solid fa-user"></i></span>
+              <span>Quản lý người dùng</span>
+            </a>
+          </li>
+          <li>
+            <a href="/quanlylothuoc.html"
+              ><span class="icon"
+                ><i class="fa-solid fa-parachute-box"></i
+              ></span>
+              <span>Quản lý lô thuốc</span>
+            </a>
+          </li>
+          <li>
+            <a href="/quanlythuoc.html"
+              ><span class="icon"><i class="fa-solid fa-tablets"></i></span>
+              <span>Quản lý thuốc</span>
+            </a>
+          </li>
+          <li>
+            <a href="/quanlyhoadon.html"
+              ><span class="icon"
+                ><i class="fa-regular fa-money-bill-1"></i
+              ></span>
+              <span>Quản lý hóa đơn</span>
+            </a>
+          </li>
+          <li>
+            <a href="/quanlykhachhang.html"
+              ><span class="icon"><i class="fa-solid fa-users"></i></span>
+              <span>Quản lý khách hàng</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content">
+      <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Quản lý khách hàng</a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <button class="btn btn-exit" type="button">Đăng xuất</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <div class="container mt-4">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Mã hóa đơn</th>
+                <th scope="col">Tên tài khoản</th>
+                <th scope="col">Ngày bán</th>
+                <th scope="col">Mã giảm giá</th>
+                <th scope="col">Số điện thoại</th>
+                <th scope="col">Tổng tiền</th>
+                <th scope="col">Xem chi tiết</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Huỳnh Tấn Lực</td>
+                <td>2024-12-01</td>
+                <td>MGG001</td>
+                <td>0353381967</td>
+                <td>500,000 VND</td>
+                <td>
+                  <button class="btn btn-primary handle-chitiet">
+                    Xem chi tiết
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Lê Văn Lợi</td>
+                <td>2024-12-02</td>
+                <td>MGG002</td>
+                <td>0987654321</td>
+                <td>1,200,000 VND</td>
+                <td>
+                  <button class="btn btn-primary handle-chitiet">
+                    Xem chi tiết
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Nguyễn Hoàng Bảo Đăng</td>
+                <td>2024-12-02</td>
+                <td>MGG002</td>
+                <td>0987654321</td>
+                <td>1,550,000 VND</td>
+                <td>
+                  <button class="btn btn-primary handle-chitiet">
+                    Xem chi tiết
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Võ Thị Hoa</td>
+                <td>2024-12-02</td>
+                <td>MGG002</td>
+                <td>0281736139</td>
+                <td>1,200,000 VND</td>
+                <td>
+                  <button class="btn btn-primary handle-chitiet">
+                    Xem chi tiết
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal Chi Tiết -->
+    <div
+      class="modal fade"
+      id="modalChiTiet"
+      tabindex="-1"
+      aria-labelledby="modalChiTietLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalChiTietLabel">Chi Tiết Hóa Đơn</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Mã sản phẩm</th>
+                  <th scope="col">Tên sản phẩm</th>
+                  <th scope="col">Số lượng</th>
+                  <th scope="col">Đơn giá</th>
+                  <th scope="col">Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody id="chiTietSanPham">
+                <!-- Dữ liệu sản phẩm sẽ được thêm ở đây -->
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript xử lý sự kiện -->
+    <script>
+      const chiTietHoaDon = {
+        1: [
+          {
+            maSP: "SP001",
+            tenSP: "Paracetamol",
+            soLuong: 2,
+            donGia: 250000,
+            thanhTien: 500000,
+          },
+          {
+            maSP: "SP002",
+            tenSP: "Cefixime",
+            soLuong: 1,
+            donGia: 100000,
+            thanhTien: 100000,
+          },
+        ],
+        2: [
+          {
+            maSP: "SP003",
+            tenSP: "Loratadine",
+            soLuong: 3,
+            donGia: 400000,
+            thanhTien: 1200000,
+          },
+        ],
+        3: [
+          {
+            maSP: "SP004",
+            tenSP: "Ibuprofen",
+            soLuong: 2,
+            donGia: 100000,
+            thanhTien: 100000,
+          },
+          {
+            maSP: "SP007",
+            tenSP: "Loratadine",
+            soLuong: 1,
+            donGia: 250000,
+            thanhTien: 250000,
+          },
+          {
+            maSP: "SP006",
+            tenSP: "Cefixime",
+            soLuong: 3,
+            donGia: 400000,
+            thanhTien: 1200000,
+          },
+        ],
+        4: [
+          {
+            maSP: "SP005",
+            tenSP: "Loratadine",
+            soLuong: 3,
+            donGia: 400000,
+            thanhTien: 1200000,
+          },
+        ],
+      };
+
+      document.querySelectorAll(".handle-chitiet").forEach((button, index) => {
+        button.addEventListener("click", () => {
+          const hoaDonID = index + 1;
+          const chiTietTable = document.getElementById("chiTietSanPham");
+          chiTietTable.innerHTML = "";
+
+          if (chiTietHoaDon[hoaDonID]) {
+            chiTietHoaDon[hoaDonID].forEach((sp) => {
+              const row = `
+                            <tr>
+                                <td>${sp.maSP}</td>
+                                <td>${sp.tenSP}</td>
+                                <td>${sp.soLuong}</td>
+                                <td>${sp.donGia.toLocaleString()} VND</td>
+                                <td>${sp.thanhTien.toLocaleString()} VND</td>
+                            </tr>
+                        `;
+              chiTietTable.innerHTML += row;
+            });
+          }
+
+          const modal = new bootstrap.Modal(
+            document.getElementById("modalChiTiet")
+          );
+          modal.show();
+        });
+      });
+    </script>
+  </body>
+</html>
