@@ -1,6 +1,7 @@
 const { LoThuoc } = require("../models/LoThuoc");
 const { Thuoc } = require("../models/Thuoc");
 const { Op } = require("sequelize");
+const Sequelize = require("sequelize");
 const sequelize = require("../config/sequelize");
 
 // Tạo lô thuốc mới
@@ -50,18 +51,39 @@ const createLoThuoc = async (req, res) => {
 
       totalCost += GiaTienNhap * SoLuong;
 
-      await Thuoc.create(
-        {
-          LoThuocID: newLoThuoc.LoThuocID,
-          TenThuoc,
-          HanSuDung,
-          SoLuong,
-          NgaySanXuat,
-          GiaTienNhap,
-          GiaTienNBan,
-        },
-        { transaction }
-      );
+      // Kiểm tra thuốc đã tồn tại theo tên
+      const existingThuoc = await Thuoc.findOne({
+        where: { TenThuoc },
+      });
+
+      if (existingThuoc) {
+        // Cập nhật thông tin thuốc nếu tên trùng
+        await existingThuoc.update(
+          {
+            LoThuocID: newLoThuoc.LoThuocID,
+            HanSuDung,
+            SoLuong,
+            NgaySanXuat,
+            GiaTienNhap,
+            GiaTienNBan,
+          },
+          { transaction }
+        );
+      } else {
+        // Thêm thuốc mới nếu không trùng tên
+        await Thuoc.create(
+          {
+            LoThuocID: newLoThuoc.LoThuocID,
+            TenThuoc,
+            HanSuDung,
+            SoLuong,
+            NgaySanXuat,
+            GiaTienNhap,
+            GiaTienNBan,
+          },
+          { transaction }
+        );
+      }
     }
 
     // Cập nhật tổng tiền của lô thuốc
@@ -118,112 +140,6 @@ const getLoThuocDetails = async (req, res) => {
   }
 };
 
-// Chỉnh sửa số lượng thuốc trong lô
-const updateThuocInLo = async (req, res) => {
-  const { ThuocID } = req.params;
-  const { SoLuong } = req.body;
-
-  if (!SoLuong || SoLuong <= 0) {
-    return res.json({
-      success: false,
-      message: "Số lượng phải lớn hơn 0",
-    });
-  }
-
-  try {
-    const thuoc = await Thuoc.findByPk(ThuocID);
-
-    if (!thuoc) {
-      return res.json({
-        success: false,
-        message: "Không tìm thấy thuốc",
-      });
-    }
-
-    await thuoc.update({ SoLuong });
-
-    res.json({
-      success: true,
-      data: thuoc,
-      message: "Cập nhật số lượng thuốc thành công",
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      error: error.message,
-      message: "Cập nhật số lượng thuốc thất bại",
-    });
-  }
-};
-
-// Xóa thuốc khỏi lô
-const deleteThuocFromLo = async (req, res) => {
-  const { ThuocID } = req.params;
-
-  try {
-    const thuoc = await Thuoc.findByPk(ThuocID);
-
-    if (!thuoc) {
-      return res.json({
-        success: false,
-        message: "Không tìm thấy thuốc",
-      });
-    }
-
-    await thuoc.destroy();
-
-    res.json({
-      success: true,
-      message: "Xóa thuốc thành công",
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      error: error.message,
-      message: "Xóa thuốc thất bại",
-    });
-  }
-};
-
-// Xác nhận lưu lô thuốc
-const finalizeLoThuoc = async (req, res) => {
-  const { LoThuocID } = req.params;
-
-  try {
-    const loThuoc = await LoThuoc.findByPk(LoThuocID, {
-      include: [{ model: Thuoc, as: "ThuocList" }],
-    });
-
-    if (!loThuoc) {
-      return res.json({
-        success: false,
-        message: "Không tìm thấy lô thuốc",
-      });
-    }
-
-    const totalCost = loThuoc.ThuocList.reduce(
-      (total, thuoc) => total + thuoc.GiaTienNhap * thuoc.SoLuong,
-      0
-    );
-
-    await loThuoc.update({
-      TongTien: totalCost,
-    });
-
-    res.json({
-      success: true,
-      data: loThuoc,
-      message: "Xác nhận lô thuốc thành công",
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      error: error.message,
-      message: "Xác nhận lô thuốc thất bại",
-    });
-  }
-};
-
 // Hàm để lấy danh sách thuốc đã hết hạn và sắp hết hạn
 const getCanhBaoHanSuDung = async (req, res) => {
   const currentDate = new Date();
@@ -253,33 +169,39 @@ const getCanhBaoHanSuDung = async (req, res) => {
   }
 };
 
-// Hàm mới để lấy danh sách tất cả lô thuốc
-const getListLoThuoc = async (req, res) => {
-  try {
-    const loThuoc = await LoThuoc.findAll();
-    res.json(loThuoc);
-  } catch (error) {
-    res.status(500).send("Có lỗi xảy ra khi lấy danh sách lô thuốc.");
-  }
+const getListLoThuoc = (req, res) => {
+  LoThuoc.findAll()
+    .then((listLoThuocs) => {
+      res.render("quanlylothuoc", { listLoThuocs });
+    })
+    .catch((err) => {
+      res.render("quanlylothuoc", { error: err.message });
+    });
 };
-
 // Hàm mới để lấy tất cả thuốc
-const getAllThuoc = async (req, res) => {
+const listhuoc = async (req, res) => {
   try {
-    const thuoc = await Thuoc.findAll();
-    res.json(thuoc);
-  } catch (error) {
-    res.status(500).send("Có lỗi xảy ra khi lấy danh sách thuốc.");
+    const listhuoc = await Thuoc.findAll({
+      where: {
+        SoLuong: {
+          [Sequelize.Op.gt]: 0,
+        },
+      },
+      order: [
+        ["TenThuoc", "ASC"],
+        ["HanSuDung", "ASC"],
+      ],
+    });
+    res.render("quanlythuoc", { listhuoc });
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 };
 
 module.exports = {
   createLoThuoc,
   getLoThuocDetails,
-  updateThuocInLo,
-  deleteThuocFromLo,
-  finalizeLoThuoc,
   getCanhBaoHanSuDung,
   getListLoThuoc,
-  getAllThuoc,
+  listhuoc,
 };

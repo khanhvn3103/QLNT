@@ -32,7 +32,6 @@ CREATE TABLE `thuoc` (
   `GiaTienNhap` float NOT NULL,
   `GiaTienBan` float NOT NULL,
   PRIMARY KEY (`ThuocID`,`LoThuocID`),
-  UNIQUE KEY `ThuocID_UNIQUE` (`ThuocID`),
   KEY `LoThuocID` (`LoThuocID`),
   CONSTRAINT `thuoc_ibfk_1` FOREIGN KEY (`LoThuocID`) REFERENCES `lothuoc` (`LoThuocID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

@@ -19,62 +19,10 @@
       rel="stylesheet"
       href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
     />
-    <link rel="stylesheet" href="css/style.css" />
   </head>
 
   <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-brand">
-        <h1><span class="lab la-accusoft"></span> Medicine</h1>
-      </div>
-      <div class="sidebar-menu">
-        <ul>
-          <li>
-            <a href="/canhbaohansudung.html"
-              ><span class="icon"
-                ><i class="fa-solid fa-business-time"></i
-              ></span>
-              <span>Cảnh báo hạn sử dụng</span>
-            </a>
-          </li>
-          <li>
-            <a href="/user.html"
-              ><span class="icon"><i class="fa-solid fa-user"></i></span>
-              <span>Quản lý người dùng</span>
-            </a>
-          </li>
-          <li>
-            <a href="/quanlylothuoc.html"
-              ><span class="icon"
-                ><i class="fa-solid fa-parachute-box"></i
-              ></span>
-              <span>Quản lý lô thuốc</span>
-            </a>
-          </li>
-          <li>
-            <a href="/quanlythuoc.html"
-              ><span class="icon"><i class="fa-solid fa-tablets"></i></span>
-              <span>Quản lý thuốc</span>
-            </a>
-          </li>
-          <li>
-            <a href="/quanlyhoadon.html"
-              ><span class="icon"
-                ><i class="fa-regular fa-money-bill-1"></i
-              ></span>
-              <span>Quản lý hóa đơn</span>
-            </a>
-          </li>
-          <li>
-            <a href="/quanlykhachhang.html"
-              ><span class="icon"><i class="fa-solid fa-users"></i></span>
-              <span>Quản lý khách hàng</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <%- include('sidebar')%>
 
     <!-- Content Area -->
     <div class="content">
@@ -105,7 +53,7 @@
       </header>
 
       <main>
-        <div class="container">
+        <div class="container mt-5">
           <table class="table">
             <thead>
               <tr>
@@ -120,66 +68,23 @@
               </tr>
             </thead>
             <tbody>
+              <% if (listhuoc.length > 0) { %> <%
+              listhuoc.forEach(function(thuoc) { %>
               <tr>
-                <td>1</td>
-                <td>101</td>
-                <td>Paracetamol</td>
-                <td>50</td>
-                <td>15/01/2023</td>
-                <td>31/12/2025</td>
-                <td>2000</td>
-                <td>2500</td>
+                <td><%= thuoc.ThuocID %></td>
+                <td><%= thuoc.LoThuocID %></td>
+                <td><%= thuoc.HanSuDung %></td>
+                <td><%= thuoc.SoLuong %></td>
+                <td><%= thuoc.TenThuoc %></td>
+                <td><%= thuoc.NgaySanXuat %></td>
+                <td><%= thuoc.GiaTienNhap %></td>
+                <td><%= thuoc.GiaTienBan %></td>
               </tr>
+              <% }); %> <% } else { %>
               <tr>
-                <td>2</td>
-                <td>102</td>
-                <td>Ibuprofen</td>
-                <td>100</td>
-                <td>01/06/2023</td>
-                <td>30/06/2025</td>
-                <td>5000</td>
-                <td>6000</td>
+                <td colspan="8">Không có thuốc nào</td>
               </tr>
-              <tr>
-                <td>3</td>
-                <td>103</td>
-                <td>Aspirin</td>
-                <td>200</td>
-                <td>10/12/2022</td>
-                <td>15/11/2025</td>
-                <td>3000</td>
-                <td>3500</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>104</td>
-                <td>Amoxicillin</td>
-                <td>150</td>
-                <td>05/03/2024</td>
-                <td>20/08/2025</td>
-                <td>4000</td>
-                <td>4800</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>105</td>
-                <td>Cefixime</td>
-                <td>75</td>
-                <td>18/06/2023</td>
-                <td>25/12/2025</td>
-                <td>3500</td>
-                <td>4200</td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td>106</td>
-                <td>Loratadine</td>
-                <td>120</td>
-                <td>22/05/2023</td>
-                <td>12/07/2025</td>
-                <td>4500</td>
-                <td>5500</td>
-              </tr>
+              <% } %>
             </tbody>
           </table>
         </div>

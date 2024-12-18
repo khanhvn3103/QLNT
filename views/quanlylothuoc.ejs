@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>QuanlyLothuoc</title>
+    <title>Quản lý Lô Thuốc</title>
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -14,201 +14,355 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
       rel="stylesheet"
     />
-    <!-- Line Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <div>
-      <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-brand">
-        <h1><span class="lab la-accusoft"></span> Medicine</h1>
-      </div>
-      <div class="sidebar-menu">
-        <ul>
-            <li>
-              <a href="/canhbaohansudung.html"
-                ><span class="icon"><i class="fa-solid fa-business-time"></i></span>
-                <span>Cảnh báo hạn sử dụng</span>
-              </a>
-            </li>
-            <li>
-              <a href="/user.html"
-                ><span class="icon"><i class="fa-solid fa-user"></i></span>
-                <span>Quản lý người dùng</span>
-              </a>
-            </li>
-            <li>
-              <a href="/quanlylothuoc.html"
-                ><span class="icon"><i class="fa-solid fa-parachute-box"></i></span>
-                <span>Quản lý lô thuốc</span>
-              </a>
-            </li>
-            <li>
-              <a href="/quanlythuoc.html"
-                ><span class="icon"><i class="fa-solid fa-tablets"></i></span>
-                <span>Quản lý thuốc</span>
-              </a>
-            </li>
-            <li>
-              <a href="/quanlyhoadon.html"
-                ><span class="icon"><i class="fa-regular fa-money-bill-1"></i></span>
-                <span>Quản lý hóa đơn</span>
-              </a>
-            </li>
-            <li>
-              <a href="/quanlykhachhang.html"
-                ><span class="icon"><i class="fa-solid fa-users"></i></span>
-                <span>Quản lý khách hàng</span>
-              </a>
-            </li>
-          </ul>
-      </div>
-    </div>
-  
-      <!-- Content Area -->
-      <div class="content">
-        <header>
-          <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="#">Quản lý lô thuốc</a>
-              <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav"
-                aria-controls="navbarNav"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                  <li class="nav-item">
-                    <button class="btn btn-exit" type="button">Đăng xuất</button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
-        </header>
+    <style>
+      /* Custom CSS for Modal */
+      .modal-content {
+        padding: 20px;
+      }
 
-        <!-- Nút thêm lô thuốc -->
-        <main>
-            <div class="container">
-                <div class="mb-3 text-end">
-                    <button
-                      class="btn btn-custom"
-                      data-bs-toggle="modal"
-                      data-bs-target="#addModal"
-                    >
-                      Thêm Lô Thuốc
-                    </button>
+      .modal-header {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #ddd;
+      }
+
+      .modal-body {
+        padding: 15px 30px;
+      }
+
+      .form-control {
+        margin-bottom: 15px;
+      }
+
+      #medicines .mb-3 {
+        margin-bottom: 1rem;
+      }
+
+      .btn-custom {
+        background-color: #5cb85c;
+        color: white;
+      }
+
+      .btn-custom:hover {
+        background-color: #4cae4c;
+      }
+
+      .btn-exit {
+        background-color: #f44336;
+        color: white;
+      }
+
+      .btn-exit:hover {
+        background-color: #d32f2f;
+      }
+    </style>
+  </head>
+
+  <body>
+    <%- include('sidebar') %>
+
+    <div class="content">
+      <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Quản lý Lô Thuốc</a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <button class="btn btn-exit" type="button">Đăng xuất</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <div class="container">
+          <div class="mb-3 text-end mt-5">
+            <button
+              class="btn btn-custom btn-success"
+              data-bs-toggle="modal"
+              data-bs-target="#addModal"
+            >
+              Thêm Lô Thuốc
+            </button>
+          </div>
+
+          <table class="table" id="medicine-table">
+            <thead>
+              <tr>
+                <th>Mã Lô Thuốc</th>
+                <th>Ngày Nhập</th>
+                <th>Tổng Tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (listLoThuocs.length > 0) { %> <%
+              listLoThuocs.forEach((loThuoc) => { %>
+              <tr>
+                <th scope="row"><%= loThuoc.LoThuocID %></th>
+                <td><%= loThuoc.NgayNhap %></td>
+                <td><%= loThuoc.TongTien %></td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td colspan="4">Không có lô thuốc nào</td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Modal Thêm Lô Thuốc -->
+        <div
+          class="modal fade"
+          id="addModal"
+          tabindex="-1"
+          aria-labelledby="addModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header text-end mb-3">
+                <h5 class="modal-title" id="addModalLabel">Thêm Lô Thuốc</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form id="addLoThuocForm">
+                  <div class="mb-3">
+                    <label for="ngayNhap" class="form-label">Ngày Nhập</label>
+                    <input
+                      type="date"
+                      name="NgayNhap"
+                      class="form-control"
+                      required
+                      value="<%= new Date().toISOString().split('T')[0] %>"
+                    />
                   </div>
-          
-                  <!-- Bảng Lô Thuốc -->
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Hạn Sử Dụng</th>
-                        <th>Tổng tiền</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- Dữ liệu lô thuốc sẽ hiển thị tại đây -->
-                      <tr>
-                        <td>1</td>
-                        <td>2025-12-31</td>
-                        <td>51.000.000 vnd</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>2025-12-31</td>
-                        <td>51.000.000 vnd</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>2025-12-31</td>
-                        <td>51.000.000 vnd</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>2025-12-31</td>
-                        <td>51.000.000 vnd</td>
-                      </tr>
-                      <!-- Các dòng dữ liệu khác sẽ được thêm vào tương tự -->
-                    </tbody>
-                  </table>
-                </div>
-          
-                <!-- Modal Thêm Lô Thuốc -->
-                <div
-                  class="modal fade"
-                  id="addModal"
-                  tabindex="-1"
-                  aria-labelledby="addModalLabel"
-                  aria-hidden="true"
-                >
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel">Thêm Lô Thuốc</h5>
-                        <button
-                          type="button"
-                          class="btn-close"
-                          data-bs-dismiss="modal"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                      <div class="modal-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="medicineName" class="form-label"
-                              >Hạn sử dụng</label
-                            >
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="medicineName"
-                              required
-                            />
-                          </div>
-                          <div class="mb-3">
-                            <label for="quantity" class="form-label">Tổng tiền</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="medicineName"
-                              required
-                            />
-                          </div>
-                        </form>
-                      </div>
-                      <div class="modal-footer">
-                        <button
-                          type="button"
-                          class="btn btn-secondary"
-                          data-bs-dismiss="modal"
-                        >
-                          Đóng
-                        </button>
-                        <button type="button" class="btn btn-primary">Lưu</button>
-                      </div>
+                  <div class="mb-3">
+                    <label for="tongTien" class="form-label">Tổng Tiền</label>
+                    <input
+                      type="number"
+                      name="TongTien"
+                      class="form-control"
+                      required
+                      readonly
+                    />
+                  </div>
+                  <div id="medicines">
+                    <div class="mb-3" id="medicine1">
+                      <label for="thuoc1" class="form-label">Thuốc 1</label>
+                      <input
+                        type="text"
+                        name="Thuoc[0][TenThuoc]"
+                        class="form-control"
+                        placeholder="Tên thuốc"
+                        required
+                      />
+                      <input
+                        type="number"
+                        name="Thuoc[0][GiaTienNhap]"
+                        class="form-control"
+                        placeholder="Giá nhập"
+                        required
+                      />
+                      <input
+                        type="number"
+                        name="Thuoc[0][SoLuong]"
+                        class="form-control"
+                        placeholder="Số lượng"
+                        required
+                      />
+                      <input
+                        type="date"
+                        name="Thuoc[0][NgaySanXuat]"
+                        class="form-control"
+                        required
+                      />
+                      <input
+                        type="date"
+                        name="Thuoc[0][HanSuDung]"
+                        class="form-control"
+                        required
+                      />
+                      <button
+                        type="button"
+                        class="btn btn-danger removeMedicineBtn"
+                      >
+                        Xóa Thuốc
+                      </button>
                     </div>
                   </div>
-                </div>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="addMedicineBtn"
+                  >
+                    Thêm Thuốc
+                  </button>
+                  <button type="submit" class="btn btn-primary">Lưu</button>
+                </form>
               </div>
             </div>
-        </main>
+          </div>
+        </div>
+      </main>
+    </div>
 
-    <!-- Bootstrap JS và Popper.js -->
+    <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let medicineCount = 1;
+
+        // Hàm tính tổng tiền
+        const calculateTotal = () => {
+          let total = 0;
+          const medicines = document.querySelectorAll('[name^="Thuoc["]');
+          medicines.forEach((medicine) => {
+            if (
+              medicine.name.includes("GiaTienNhap") ||
+              medicine.name.includes("SoLuong")
+            ) {
+              let giaNhap =
+                parseFloat(
+                  document.querySelector(
+                    `[name="${medicine.name.replace(
+                      "GiaTienNhap",
+                      "GiaTienNhap"
+                    )}"]`
+                  )?.value
+                ) || 0;
+              let soLuong =
+                parseInt(
+                  document.querySelector(
+                    `[name="${medicine.name.replace("SoLuong", "SoLuong")}"]`
+                  )?.value
+                ) || 0;
+              total += giaNhap * soLuong;
+            }
+          });
+          document.querySelector('[name="TongTien"]').value = total;
+        };
+
+        // Thêm thuốc mới
+        document
+          .getElementById("addMedicineBtn")
+          .addEventListener("click", () => {
+            const medicinesContainer = document.getElementById("medicines");
+            const newMedicine = document.createElement("div");
+            newMedicine.classList.add("mb-3");
+
+            newMedicine.innerHTML = `
+              <label for="thuoc${medicineCount}" class="form-label">Thuốc ${
+              medicineCount + 1
+            }</label>
+              <input
+                type="text"
+                name="Thuoc[${medicineCount}][TenThuoc]"
+                class="form-control"
+                placeholder="Tên thuốc"
+                required
+              />
+              <input
+                type="number"
+                name="Thuoc[${medicineCount}][GiaTienNhap]"
+                class="form-control"
+                placeholder="Giá nhập"
+                required
+              />
+              <input
+                type="number"
+                name="Thuoc[${medicineCount}][SoLuong]"
+                class="form-control"
+                placeholder="Số lượng"
+                required
+              />
+              <input
+                type="date"
+                name="Thuoc[${medicineCount}][NgaySanXuat]"
+                class="form-control"
+                required
+              />
+              <input
+                type="date"
+                name="Thuoc[${medicineCount}][HanSuDung]"
+                class="form-control"
+                required
+              />
+              <button type="button" class="btn btn-danger removeMedicineBtn">Xóa Thuốc</button>
+            `;
+            medicinesContainer.appendChild(newMedicine);
+            medicineCount++;
+
+            // Tính tổng tiền
+            calculateTotal();
+          });
+
+        // Xóa thuốc
+        document.addEventListener("click", (e) => {
+          if (e.target && e.target.classList.contains("removeMedicineBtn")) {
+            const medicineDiv = e.target.closest(".mb-3");
+            medicineDiv.remove();
+            // Tính lại tổng tiền sau khi xóa
+            calculateTotal();
+          }
+        });
+
+        // Tính toán tổng tiền khi người dùng nhập thông tin
+        document
+          .getElementById("addLoThuocForm")
+          .addEventListener("input", calculateTotal);
+
+        // Xử lý thêm Lô Thuốc
+        document
+          .getElementById("addLoThuocForm")
+          .addEventListener("submit", (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            console.log("Adding Lo Thuoc:", data);
+
+            fetch("/lothuoc/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            })
+              .then((response) => response.json())
+              .then((result) => {
+                console.log("Add Lo Thuoc response:", result);
+                if (result.success) {
+                  alert("Thêm Lô Thuốc thành công");
+                  location.reload(); // Tải lại trang để cập nhật danh sách lô thuốc
+                } else {
+                  alert(result.message);
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          });
+      });
+    </script>
   </body>
 </html>
