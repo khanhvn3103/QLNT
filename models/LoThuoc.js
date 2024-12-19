@@ -26,4 +26,5 @@ LoThuoc.init(
     timestamps: false, // Không sử dụng timestamps (createdAt và updatedAt)
   }
 );
+
 module.exports = { LoThuoc };

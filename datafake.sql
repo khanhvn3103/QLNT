@@ -1,11 +1,17 @@
--- Bảng `khachhang`
+
 INSERT INTO `khachhang` (`SoDienThoai`, `HoTen`, `Diem`) VALUES
 ('0909123456', 'Nguyễn Văn A', 100),
 ('0912345678', 'Trần Thị A', 200),
 ('0987654321', 'Lê Văn A', 150),
 ('0987654322', 'Nguyen Van B', 10),
 ('0987654323', 'Tran Thi B', 15),
-('0987654324', 'Le Thi B', 20);
+('0987654324', 'Le Thi B', 20),
+('0912345679', 'Nguyễn Thị C', 100),
+('0987654312', 'Lê Minh C', 150),
+('0909123457', 'Trần Minh C', 200),
+('0912345689', 'Nguyễn Thị D', 80),
+('0945678901', 'Trần Minh D', 90),
+('0934567890', 'Nguyễn Thị E', 60);
 
 -- Bảng `lothuoc`
 INSERT INTO `lothuoc` (`LoThuocID`, `NgayNhap`, `TongTien`) VALUES
@@ -63,23 +69,54 @@ INSERT INTO `thuoc` (`ThuocID`, `LoThuocID`, `HanSuDung`, `SoLuong`, `TenThuoc`,
 INSERT INTO `nguoidung` (`TenTaiKhoan`, `MatKhau`, `Email`, `SoDienThoai`, `ChucVu`, `HoTen`, `DiaChi`) VALUES
 ('admin', 'admin', 'duong@gmail.com', '0123456789', 1, 'Dương', 'Hồ Chí Minh'),
 ('user1', 'password1', 'user1@example.com', '0909123456', 1, 'Nguyễn Văn A', 'Hà Nội'),
-('user2', 'password2', 'user2@example.com', '0912345678', 2, 'Trần Thị B', 'Hồ Chí Minh');
+('user2', 'password2', 'user2@example.com', '0912345678', 2, 'Trần Thị B', 'Hồ Chí Minh'),
+('user3', 'password3', 'user3@example.com', '0934567890', 3, 'Lê Minh C', 'Đà Nẵng'),
+('user4', 'password4', 'user4@example.com', '0945678901', 2, 'Phạm Thị D', 'Bắc Ninh');
 
 -- Bảng `hoadon`
 INSERT INTO `hoadon` (`HoaDonID`, `TenTaiKhoan`, `NgayBan`, `MaGiamGiaID`, `SoDienThoai`, `TongTien`) VALUES
-(1, 'user1', '2024-12-08', NULL, '0909123456', 150000),
-(2, 'user2', '2024-12-08', NULL, '0912345678', 90000),
+(1, 'user1', '2024-12-08', 'VOUCHER1', '0909123456', 150000),
+(2, 'user2', '2024-12-08', 'VOUCHER2', '0912345678', 90000),
 (3, 'admin', '2023-01-01', NULL, '0987654321', 100000),
-(4, 'user1', '2023-02-01', NULL, '0987654322', 150000);
+(4, 'user1', '2023-02-01', NULL, '0987654322', 150000),
+(5, 'user3', '2024-05-15', 'VOUCHER3', '0934567890', 120000),
+(6, 'user4', '2024-08-01', 'VOUCHER4', '0945678901', 200000);
+
 
 -- Bảng `chitiethd`
 INSERT INTO `chitiethd` (`ThuocID`, `HoaDonID`, `SoLuong`, `DonGia`) VALUES
 (1, 1, 2, 15000),
 (2, 2, 3, 30000),
 (3, 1, 1, 25000),
-(4, 1, 4, 12000);
+(4, 1, 4, 12000),
+(5, 5, 2, 20000),
+(6, 6, 1, 25000),
+(7, 3, 3, 15000),
+(8, 3, 2, 17000),
+(9, 4, 1, 25000),
+(10, 4, 2, 18000),
+(11, 5, 3, 22000),
+(12, 5, 1, 25000),
+(13, 6, 2, 23000),
+(14, 6, 4, 21000),
+(15, 1, 1, 18000),
+(16, 2, 5, 25000),
+(17, 1, 3, 16000),
+(18, 2, 4, 23000),
+(19, 5, 2, 28000),
+(20, 5, 3, 22000),
+(21, 6, 5, 20000),
+(22, 6, 1, 24000),
+(23, 1, 6, 17000),
+(24, 2, 7, 20000),
+(25, 5, 1, 30000),
+(26, 5, 2, 26000),
+(27, 6, 4, 27000);
 
 -- Chèn dữ liệu giả cho bảng `magiamgia`
 INSERT INTO `magiamgia` (`MaGiamGiaID`, `beginAt` , `endAt`, `GiamGia`) VALUES
 ('VOUCHER1', '2023-12-01', '2025-01-01', 10),
-('VOUCHER2', '2024-01-01', '2025-02-01', 20);
+('VOUCHER2', '2024-01-01', '2025-02-01', 20),
+('VOUCHER3', '2024-05-01', '2025-06-01', 15),
+('VOUCHER4', '2024-07-01', '2025-08-01', 25),
+('VOUCHER5', '2024-08-01', '2025-09-01', 30);

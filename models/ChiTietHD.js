@@ -10,20 +10,20 @@ ChiTietHD.init(
     ThuocID: {
       type: DataTypes.INTEGER,
       references: {
-        model: Thuoc, // Tham chiếu tới model Medicine
-        key: "ThuocID", // Khóa chính của model Medicine
+        model: Thuoc, // Tham chiếu tới model Thuoc
+        key: "ThuocID", // Khóa chính của model Thuoc
       },
       allowNull: false,
-      primaryKey: true,
+      primaryKey: true, // ThuocID là một phần của khóa chính hợp nhất
     },
     HoaDonID: {
       type: DataTypes.INTEGER,
       references: {
-        model: HoaDon, // Tham chiếu tới model Medicine
-        key: "HoaDonID", // Khóa chính của model Medicine
+        model: HoaDon, // Tham chiếu tới model HoaDon
+        key: "HoaDonID", // Khóa chính của model HoaDon
       },
       allowNull: false,
-      primaryKey: true,
+      primaryKey: true, // HoaDonID là một phần của khóa chính hợp nhất
     },
     SoLuong: {
       type: DataTypes.INTEGER,
@@ -36,9 +36,10 @@ ChiTietHD.init(
   },
   {
     sequelize,
-    modelName: "ChiTietHD", // Tên của model
-    tableName: "chitiethd", // Tên của bảng trong cơ sở dữ liệu
-    timestamps: false, // Không sử dụng timestamps (createdAt và updatedAt)
+    modelName: "ChiTietHD",
+    tableName: "chitiethd",
+    timestamps: false,
   }
 );
+
 module.exports = { ChiTietHD };
