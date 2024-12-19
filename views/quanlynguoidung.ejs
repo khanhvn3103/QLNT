@@ -322,6 +322,8 @@
       document
         .getElementById("addUserForm")
         .addEventListener("submit", (event) => {
+          event.preventDefault(); // Ngừng việc gửi form theo cách mặc định
+
           const formData = new FormData(event.target);
           const data = Object.fromEntries(formData);
           console.log("Adding user:", data);
@@ -333,9 +335,15 @@
             },
             body: JSON.stringify(data),
           })
-            .then((response) => response.json())
+            .then((response) => {
+              // Kiểm tra nếu phản hồi không thành công
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json(); // Chuyển phản hồi thành JSON
+            })
             .then((result) => {
-              console.log("Add user response:", result);
+              console.log("Add user result:", result);
               if (result.success) {
                 alert("Thêm người dùng thành công");
                 location.reload();

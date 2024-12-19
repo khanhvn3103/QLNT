@@ -309,67 +309,52 @@
         document
           .querySelector("#addLoThuocForm")
           .addEventListener("submit", async (event) => {
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData.entries());
+            event.preventDefault();
 
-            // Tạo mảng thuốc từ dữ liệu trong form
-            data.ThuocData = [];
-            const medicineDivs = document.querySelectorAll("#medicines > div");
-
-            medicineDivs.forEach((medicineDiv, index) => {
-              const thuoc = {
-                TenThuoc: formData.get(`ThuocData[${index}][TenThuoc]`),
-                GiaTienNhap: Number(
-                  formData.get(`ThuocData[${index}][GiaTienNhap]`)
-                ),
-                SoLuong: Number(formData.get(`ThuocData[${index}][SoLuong]`)),
-                NgaySanXuat: formData.get(`ThuocData[${index}][NgaySanXuat]`),
-                HanSuDung: formData.get(`ThuocData[${index}][HanSuDung]`),
-              };
-
-              // Kiểm tra nếu thuốc hợp lệ trước khi thêm vào mảng
-              if (
-                thuoc.TenThuoc &&
-                thuoc.GiaTienNhap &&
-                thuoc.SoLuong &&
-                thuoc.NgaySanXuat &&
-                thuoc.HanSuDung
-              ) {
-                data.ThuocData.push(thuoc);
-              } else {
-                console.error(`Thuốc ${index + 1} không hợp lệ:`, thuoc);
-              }
-            });
-
-            // Kiểm tra dữ liệu NgayNhap
-            if (!data.NgayNhap) {
-              alert("Vui lòng nhập ngày nhập!");
-              return;
-            }
-
-            // Kiểm tra tổng tiền
-            if (isNaN(data.TongTien) || data.TongTien <= 0) {
-              alert("Tổng tiền không hợp lệ!");
-              return;
-            }
-
-            // Chuyển tổng tiền thành số nếu chưa
-            data.TongTien = Number(data.TongTien);
-
-            // Log dữ liệu chuẩn bị gửi đi
-            console.log("Ngày nhập:", data.NgayNhap);
-            console.log("Tổng tiền:", data.TongTien);
-            data.ThuocData.forEach((thuoc, index) => {
-              console.log(`Thuốc ${index + 1}:`, thuoc);
-            });
-
-            console.log(
-              "Dữ liệu chuẩn bị gửi đi:",
-              JSON.stringify(data, null, 2)
-            );
-
-            // Gửi dữ liệu đến server qua fetch
             try {
+              const formData = new FormData(event.target);
+              const data = Object.fromEntries(formData.entries());
+
+              // Tạo mảng thuốc từ form
+              data.ThuocData = [];
+              const medicineDivs =
+                document.querySelectorAll("#medicines > div");
+
+              medicineDivs.forEach((medicineDiv, index) => {
+                const thuoc = {
+                  TenThuoc: formData.get(`ThuocData[${index}][TenThuoc]`),
+                  GiaTienNhap: Number(
+                    formData.get(`ThuocData[${index}][GiaTienNhap]`)
+                  ),
+                  SoLuong: Number(formData.get(`ThuocData[${index}][SoLuong]`)),
+                  NgaySanXuat: formData.get(`ThuocData[${index}][NgaySanXuat]`),
+                  HanSuDung: formData.get(`ThuocData[${index}][HanSuDung]`),
+                };
+
+                if (
+                  thuoc.TenThuoc &&
+                  thuoc.GiaTienNhap &&
+                  thuoc.SoLuong &&
+                  thuoc.NgaySanXuat &&
+                  thuoc.HanSuDung
+                ) {
+                  data.ThuocData.push(thuoc);
+                }
+              });
+
+              if (
+                !data.NgayNhap ||
+                isNaN(data.TongTien) ||
+                data.TongTien <= 0
+              ) {
+                alert("Dữ liệu không hợp lệ!");
+                return;
+              }
+
+              data.TongTien = Number(data.TongTien);
+
+              console.log("Gửi dữ liệu đến server:", data);
+
               const response = await fetch("/thuoclo/lothuoc", {
                 method: "POST",
                 headers: {
@@ -378,18 +363,24 @@
                 body: JSON.stringify(data),
               });
 
+              if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Phản hồi lỗi từ server:", errorData);
+                alert("Lỗi từ server: " + errorData.message);
+                return;
+              }
+
               const responseData = await response.json();
               console.log("Phản hồi từ server:", responseData);
 
-              // Kiểm tra phản hồi từ server
-              if (response.ok && responseData.success) {
+              if (responseData.success) {
                 alert("Lưu thành công!");
                 location.reload();
               } else {
-                alert("Đã xảy ra lỗi khi lưu: " + responseData.message);
+                alert("Không thể lưu: " + responseData.message);
               }
             } catch (error) {
-              console.error("Lỗi:", error);
+              console.error("Lỗi không mong muốn:", error);
               alert("Không thể kết nối đến server!");
             }
           });

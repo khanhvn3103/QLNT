@@ -175,29 +175,39 @@
         document
           .getElementById("addVoucherForm")
           .addEventListener("submit", (event) => {
+            event.preventDefault(); // Ngăn hành vi mặc định của form
+
             const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
-            console.log("Adding voucher:", data);
+            const data = Object.fromEntries(formData.entries()); // Chuyển dữ liệu từ form thành object
+
+            console.log("Đang thêm voucher:", data);
 
             fetch("/magiamgia/", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify(data),
+              body: JSON.stringify(data), // Gửi dữ liệu dạng JSON
             })
-              .then((response) => response.json())
+              .then((response) => {
+                if (!response.ok) {
+                  // Kiểm tra nếu server trả về lỗi HTTP
+                  throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Chuyển đổi phản hồi thành JSON
+              })
               .then((result) => {
-                console.log("Add voucher response:", result);
+                console.log("Phản hồi thêm voucher:", result);
                 if (result.success) {
                   alert("Thêm voucher thành công");
-                  location.reload();
+                  location.reload(); // Reload trang nếu thành công
                 } else {
-                  alert(result.message);
+                  alert("Lỗi: " + result.message);
                 }
               })
               .catch((error) => {
-                console.error("Error:", error);
+                console.error("Lỗi không mong muốn:", error);
+                alert("Không thể kết nối đến server hoặc lỗi không mong muốn.");
               });
           });
 
