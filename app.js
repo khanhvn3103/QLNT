@@ -8,12 +8,13 @@ const app = express();
 
 // Import routes
 const NguoiDungRoutes = require("./routes/NguoiDungRoutes");
-const thuocLoThuocRoutes = require("./routes/ThuocLoThuocRoutes"); // Router hợp nhất cho lô thuốc và thuốc
+const thuocLoThuocRoutes = require("./routes/ThuocLoThuocRoutes");
 const canhBaoRoutes = require("./routes/CanhBaoRoutes");
 const maGiamGiaRoutes = require("./routes/MaGiamGiaRoutes");
 const hoaDonRoutes = require("./routes/HoaDonRoutes");
 const khachHangRoutes = require("./routes/KhachHangRoutes");
 const banHangRoutes = require("./routes/BanHangRoutes");
+const NguoiDungController = require("./controllers/NguoiDungController");
 
 // Middleware cho bodyParser
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -36,24 +37,37 @@ app.set("views", path.join(__dirname, "views"));
 // Cấu hình static files (nếu có tệp tĩnh như CSS, JS, images...)
 app.use(express.static(path.join(__dirname, "public")));
 
-// Vào trang chủ check đăng nhập
+// Middleware kiểm tra đăng nhập
+const checkLogin = (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/login"); // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+  }
+  next(); // Nếu đã đăng nhập, tiếp tục xử lý
+};
+
+// Trang chủ kiểm tra đăng nhập
 app.get("/", (req, res) => {
   if (!req.session.user) {
-    // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
-    return res.redirect("/nguoidung/login"); // Chỉ cần tên tệp, không cần thêm dấu gạch chéo "/"
+    return res.redirect("/login");
   }
-  // Nếu đã đăng nhập, hiển thị trang cảnh báo
   res.redirect("/canhbao");
 });
 
-// Routes
+// Routes cho đăng nhập, đăng xuất
+app.get("/login", NguoiDungController.showLoginForm);
+app.post("/login", NguoiDungController.handleLogin);
+app.get("/logout", NguoiDungController.logout);
+
+// Áp dụng middleware checkLogin cho các route yêu cầu đăng nhập
+app.use("/canhbao", checkLogin, canhBaoRoutes);
+app.use("/thuoclo", checkLogin, thuocLoThuocRoutes);
+app.use("/hoadon", checkLogin, hoaDonRoutes);
+app.use("/khachhang", checkLogin, khachHangRoutes);
+app.use("/banhang", checkLogin, banHangRoutes);
+
+// Các route không yêu cầu đăng nhập (ví dụ: đăng ký, đăng nhập...)
 app.use("/nguoidung", NguoiDungRoutes);
-app.use("/thuoclo", thuocLoThuocRoutes); // Sử dụng router hợp nhất cho lô thuốc và thuốc
-app.use("/canhbao", canhBaoRoutes);
 app.use("/magiamgia", maGiamGiaRoutes);
-app.use("/hoadon", hoaDonRoutes);
-app.use("/khachhang", khachHangRoutes);
-app.use("/banhang", banHangRoutes);
 
 // Middleware xử lý lỗi 404 (tùy chọn)
 app.use((req, res, next) => {

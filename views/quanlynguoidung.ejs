@@ -41,7 +41,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                  <button class="btn btn-exit" type="button">Đăng xuất</button>
+                  <form action="/logout" method="GET">
+                    <button class="btn btn-exit" type="submit">
+                      Đăng xuất
+                    </button>
+                  </form>
                 </li>
               </ul>
             </div>
@@ -319,7 +323,6 @@
       document
         .getElementById("addUserForm")
         .addEventListener("submit", (event) => {
-          event.preventDefault();
           const formData = new FormData(event.target);
           const data = Object.fromEntries(formData);
           console.log("Adding user:", data);
@@ -371,7 +374,6 @@
                 document
                   .getElementById("editUserForm")
                   .addEventListener("submit", (event) => {
-                    event.preventDefault();
                     const formData = new FormData(event.target);
                     const data = Object.fromEntries(formData);
                     console.log(data.password);

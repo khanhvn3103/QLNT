@@ -65,6 +65,7 @@ const getChiTietHoaDon = async (req, res) => {
 const saveOrder = async (req, res) => {
   const { Diem, HoTen, MaGiamGiaID, SoDienThoai, TongTien, cart } = req.body;
   let today = new Date(); // sửa lại để tạo đối tượng Date hợp lệ
+  const TenTaiKhoan = req.session.user.TenTaiKhoan;
   try {
     // Kiểm tra xem khách hàng đã tồn tại chưa
     let khachhang = await KhachHang.findByPk(SoDienThoai);
@@ -85,7 +86,7 @@ const saveOrder = async (req, res) => {
 
     // Tạo hóa đơn mới
     const newOrder = await HoaDon.create({
-      TenTaiKhoan: "admin",
+      TenTaiKhoan: TenTaiKhoan,
       NgayBan: today,
       MaGiamGiaID: MaGiamGiaID || null,
       SoDienThoai: SoDienThoai,

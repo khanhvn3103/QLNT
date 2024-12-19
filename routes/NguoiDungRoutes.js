@@ -3,9 +3,6 @@ const router = express.Router();
 const NguoiDungController = require("../controllers/NguoiDungController");
 
 // Trang đăng nhập
-router.get("/login", NguoiDungController.showLoginForm);
-router.post("/login", NguoiDungController.handleLogin);
-router.get("/logout", NguoiDungController.logout);
 
 // Hiển thị trang quản lý người dùng
 router.get("/", NguoiDungController.showUserManagementPage);
