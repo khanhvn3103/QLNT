@@ -16,7 +16,7 @@ const getAllKhachHang = async () => {
       attributes: ["SoDienThoai", "HoTen", "Diem"],
     });
 
-    return listKhachHang; // Trả về dữ liệu mà không gọi res.json
+    return listKhachHang;
   } catch (err) {
     console.error("Lỗi khi lấy danh sách khách hàng:", err);
     throw err;

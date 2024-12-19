@@ -21,9 +21,9 @@ LoThuoc.init(
   },
   {
     sequelize,
-    modelName: "LoThuoc", // Tên của model
-    tableName: "lothuoc", // Tên của bảng trong cơ sở dữ liệu
-    timestamps: false, // Không sử dụng timestamps (createdAt và updatedAt)
+    modelName: "LoThuoc",
+    tableName: "lothuoc",
+    timestamps: false,
   }
 );
 

@@ -10,20 +10,20 @@ ChiTietHD.init(
     ThuocID: {
       type: DataTypes.INTEGER,
       references: {
-        model: Thuoc, // Tham chiếu tới model Thuoc
-        key: "ThuocID", // Khóa chính của model Thuoc
+        model: Thuoc,
+        key: "ThuocID",
       },
       allowNull: false,
-      primaryKey: true, // ThuocID là một phần của khóa chính hợp nhất
+      primaryKey: true,
     },
     HoaDonID: {
       type: DataTypes.INTEGER,
       references: {
-        model: HoaDon, // Tham chiếu tới model HoaDon
-        key: "HoaDonID", // Khóa chính của model HoaDon
+        model: HoaDon,
+        key: "HoaDonID",
       },
       allowNull: false,
-      primaryKey: true, // HoaDonID là một phần của khóa chính hợp nhất
+      primaryKey: true,
     },
     SoLuong: {
       type: DataTypes.INTEGER,

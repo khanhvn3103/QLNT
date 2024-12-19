@@ -221,7 +221,6 @@
           </div>
         </div>
 
-        <!-- Modal sửa người dùng -->
         <div
           class="modal fade"
           id="editmodal"
@@ -339,7 +338,7 @@
               console.log("Add user response:", result);
               if (result.success) {
                 alert("Thêm người dùng thành công");
-                location.reload(); // Tải lại trang để cập nhật danh sách người dùng
+                location.reload();
               } else {
                 alert(result.message);
               }
@@ -367,7 +366,7 @@
                 document.getElementById("editSoDienThoai").value =
                   user.SoDienThoai;
                 document.getElementById("editEmail").value = user.Email;
-                document.getElementById("editpassword").value = ""; // Để trống mật khẩu khi sửa
+                document.getElementById("editpassword").value = "";
                 document.getElementById("editDiaChi").value = user.DiaChi;
                 document.getElementById("editChucVu").value = user.ChucVu;
 
@@ -380,7 +379,7 @@
 
                     // Kiểm tra xem trường mật khẩu có bị để trống không
                     if (!data.password) {
-                      delete data.password; // Xóa trường mật khẩu nếu để trống
+                      delete data.password;
                     }
 
                     console.log("Updating user:", data);
@@ -397,7 +396,7 @@
                         console.log("Update user response:", result);
                         if (result.success) {
                           alert("Sửa người dùng thành công");
-                          location.reload(); // Tải lại trang để cập nhật danh sách người dùng
+                          location.reload();
                         } else {
                           alert(result.message);
                         }
@@ -435,7 +434,7 @@
                 console.log("Delete user response:", result);
                 if (result.success) {
                   alert("Xóa người dùng thành công");
-                  location.reload(); // Tải lại trang để cập nhật danh sách người dùng
+                  location.reload();
                 } else {
                   alert(result.message);
                 }

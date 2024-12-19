@@ -64,7 +64,7 @@ const getChiTietHoaDon = async (req, res) => {
 
 const saveOrder = async (req, res) => {
   const { Diem, HoTen, MaGiamGiaID, SoDienThoai, TongTien, cart } = req.body;
-  let today = new Date(); // sửa lại để tạo đối tượng Date hợp lệ
+  let today = new Date();
   const TenTaiKhoan = req.session.user.TenTaiKhoan;
   try {
     // Kiểm tra xem khách hàng đã tồn tại chưa
@@ -74,7 +74,7 @@ const saveOrder = async (req, res) => {
     if (khachhang) {
       // Cập nhật điểm
       khachhang.Diem += TongTien / 1000;
-      await khachhang.save(); // Lưu lại thay đổi điểm khách hàng
+      await khachhang.save();
     } else {
       // Nếu khách hàng không tồn tại, tạo mới
       khachhang = await KhachHang.create({
@@ -106,9 +106,9 @@ const saveOrder = async (req, res) => {
 
         if (existingDetail) {
           // Nếu đã tồn tại, cập nhật số lượng và đơn giá
-          existingDetail.SoLuong += parseInt(item.quantity); // Cộng thêm số lượng
-          existingDetail.DonGia = parseFloat(item.price); // Cập nhật đơn giá nếu cần
-          await existingDetail.save(); // Lưu lại thay đổi
+          existingDetail.SoLuong += parseInt(item.quantity);
+          existingDetail.DonGia = parseFloat(item.price);
+          await existingDetail.save();
         } else {
           // Nếu chưa tồn tại, tạo mới
           const newChiTietHD = await ChiTietHD.create({
@@ -118,20 +118,17 @@ const saveOrder = async (req, res) => {
             DonGia: parseFloat(item.price),
           });
         }
-
-        // Sau khi tạo chi tiết hóa đơn, trừ số lượng thuốc trong kho
         // Truy vấn thuốc với ThuocID và LoThuocID cụ thể
         const thuoc = await Thuoc.findOne({
           where: {
             ThuocID: parseInt(item.id),
-            LoThuocID: parseInt(item.loid), // Lọc chính xác theo LoThuocID
+            LoThuocID: parseInt(item.loid),
           },
         });
 
         if (thuoc) {
-          // Giảm số lượng thuốc
           thuoc.SoLuong -= parseInt(item.quantity);
-          await thuoc.save(); // Lưu lại sự thay đổi
+          await thuoc.save();
         } else {
           console.error("Thuốc không tồn tại với ThuocID và LoThuocID này");
         }
@@ -140,7 +137,7 @@ const saveOrder = async (req, res) => {
           "Error creating or updating ChiTietHD or updating Thuoc:",
           error.message
         );
-        console.error("Validation errors:", error.errors); // In chi tiết lỗi validation
+        console.error("Validation errors:", error.errors);
       }
     }
 

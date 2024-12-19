@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize");
-const { NguoiDung } = require("./NguoiDung"); // Import model NguoiDung
+const { NguoiDung } = require("./NguoiDung");
 
 class HoaDon extends Model {}
 
