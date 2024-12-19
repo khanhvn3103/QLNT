@@ -8,15 +8,15 @@ Thuoc.init(
   {
     ThuocID: {
       type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
     LoThuocID: {
       type: DataTypes.INTEGER,
       references: {
-        model: LoThuoc, // Tham chiếu tới model Medicine
-        key: "LoThuocID", // Khóa chính của model Medicine
+        model: LoThuoc, // Tham chiếu tới model LoThuoc
+        key: "LoThuocID", // Khóa chính của model LoThuoc
       },
-      primaryKey: true,
       allowNull: false, // Không cho phép giá trị NULL
     },
     HanSuDung: {
@@ -40,7 +40,6 @@ Thuoc.init(
       allowNull: false,
     },
     GiaTienBan: {
-      // Sửa lại từ GiaTienNBan thành GiaTienBan
       type: DataTypes.FLOAT,
       allowNull: false,
     },
@@ -52,4 +51,5 @@ Thuoc.init(
     timestamps: false, // Không sử dụng timestamps (createdAt và updatedAt)
   }
 );
+
 module.exports = { Thuoc };

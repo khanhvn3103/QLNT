@@ -6,136 +6,68 @@ const sequelize = require("../config/sequelize");
 
 // Tạo lô thuốc mới
 const createLoThuoc = async (req, res) => {
-  const { NgayNhap, ThuocList } = req.body;
-  if (!NgayNhap || !Array.isArray(ThuocList) || ThuocList.length === 0) {
-    return res.json({
+  const { NgayNhap, TongTien, ThuocData } = req.body;
+  console.log(ThuocData);
+
+  // Kiểm tra dữ liệu đầu vào
+  if (!Array.isArray(ThuocData)) {
+    return res.status(400).json({
       success: false,
-      message: "Ngày nhập và danh sách thuốc không được để trống",
+      message: "ThuocData phải là một mảng.",
     });
   }
 
-  const transaction = await sequelize.transaction();
   try {
     // Tạo lô thuốc mới
-    const newLoThuoc = await LoThuoc.create(
-      {
-        NgayNhap,
-        TongTien: 0,
-      },
-      { transaction }
-    );
+    const loThuoc = await LoThuoc.create({
+      NgayNhap,
+      TongTien,
+    });
 
-    let totalCost = 0;
+    // Thêm thuốc vào lô thuốc
+    for (let i = 0; i < ThuocData.length; i++) {
+      // Sử dụng ThuocData để chuẩn bị dữ liệu thuốc
+      const thuocData = {
+        LoThuocID: loThuoc.LoThuocID, // Gán LoThuocID mới cho thuốc
+        TenThuoc: ThuocData[i].TenThuoc,
+        GiaTienNhap: ThuocData[i].GiaTienNhap,
+        GiaTienBan: ThuocData[i].GiaTienNhap + 5, // Tính giá bán
+        SoLuong: ThuocData[i].SoLuong,
+        NgaySanXuat: ThuocData[i].NgaySanXuat,
+        HanSuDung: ThuocData[i].HanSuDung,
+      };
 
-    // Thêm từng thuốc vào lô
-    for (const thuoc of ThuocList) {
-      const {
-        TenThuoc,
-        HanSuDung,
-        SoLuong,
-        NgaySanXuat,
-        GiaTienNhap,
-        GiaTienNBan,
-      } = thuoc;
-
-      if (
-        !TenThuoc ||
-        !HanSuDung ||
-        !SoLuong ||
-        !NgaySanXuat ||
-        !GiaTienNhap ||
-        !GiaTienNBan
-      ) {
-        throw new Error("Thông tin thuốc không hợp lệ");
-      }
-
-      totalCost += GiaTienNhap * SoLuong;
-
-      // Kiểm tra thuốc đã tồn tại theo tên
+      // Kiểm tra nếu thuốc đã tồn tại trong bảng Thuoc
       const existingThuoc = await Thuoc.findOne({
-        where: { TenThuoc },
+        where: {
+          TenThuoc: ThuocData[i].TenThuoc, // Kiểm tra thuốc theo tên
+        },
       });
 
       if (existingThuoc) {
-        // Cập nhật thông tin thuốc nếu tên trùng
-        await existingThuoc.update(
-          {
-            LoThuocID: newLoThuoc.LoThuocID,
-            HanSuDung,
-            SoLuong,
-            NgaySanXuat,
-            GiaTienNhap,
-            GiaTienNBan,
-          },
-          { transaction }
+        // Nếu thuốc đã tồn tại, tạo một bản sao mới của thuốc với LoThuocID mới
+        await Thuoc.create({
+          ...thuocData,
+          ThuocID: existingThuoc.ThuocID, // Giữ lại ThuocID cũ
+        });
+        console.log(
+          `Thuốc ${ThuocData[i].TenThuoc} đã được tạo bản sao mới với LoThuocID ${loThuoc.LoThuocID}.`
         );
       } else {
-        // Thêm thuốc mới nếu không trùng tên
-        await Thuoc.create(
-          {
-            LoThuocID: newLoThuoc.LoThuocID,
-            TenThuoc,
-            HanSuDung,
-            SoLuong,
-            NgaySanXuat,
-            GiaTienNhap,
-            GiaTienNBan,
-          },
-          { transaction }
-        );
+        // Nếu thuốc chưa tồn tại, tạo mới thuốc
+        await Thuoc.create(thuocData);
+        console.log(`Thuốc ${ThuocData[i].TenThuoc} đã được tạo mới.`);
       }
     }
 
-    // Cập nhật tổng tiền của lô thuốc
-    await newLoThuoc.update({ TongTien: totalCost }, { transaction });
-
-    await transaction.commit();
-    res.json({
-      success: true,
-      data: newLoThuoc,
-      message: "Tạo lô thuốc thành công",
-    });
+    // Trả về phản hồi thành công
+    res.json({ success: true });
   } catch (error) {
-    await transaction.rollback();
-    res.json({
+    console.error("Error occurred:", error);
+    res.status(500).json({
       success: false,
+      message: "Có lỗi xảy ra khi tạo lô thuốc.",
       error: error.message,
-      message: "Tạo lô thuốc thất bại",
-    });
-  }
-};
-
-// Hiển thị chi tiết lô thuốc
-const getLoThuocDetails = async (req, res) => {
-  const { LoThuocID } = req.params;
-
-  try {
-    const loThuoc = await LoThuoc.findByPk(LoThuocID, {
-      include: [
-        {
-          model: Thuoc,
-          as: "ThuocList",
-        },
-      ],
-    });
-
-    if (!loThuoc) {
-      return res.json({
-        success: false,
-        message: "Không tìm thấy lô thuốc",
-      });
-    }
-
-    res.json({
-      success: true,
-      data: loThuoc,
-      message: "Lấy thông tin lô thuốc thành công",
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      error: error.message,
-      message: "Lấy thông tin lô thuốc thất bại",
     });
   }
 };
@@ -200,7 +132,6 @@ const listhuoc = async (req, res) => {
 
 module.exports = {
   createLoThuoc,
-  getLoThuocDetails,
   getCanhBaoHanSuDung,
   getListLoThuoc,
   listhuoc,

@@ -170,34 +170,34 @@
                       <label for="thuoc1" class="form-label">Thuốc 1</label>
                       <input
                         type="text"
-                        name="Thuoc[0][TenThuoc]"
+                        name="ThuocData[0][TenThuoc]"
                         class="form-control"
                         placeholder="Tên thuốc"
                         required
                       />
                       <input
                         type="number"
-                        name="Thuoc[0][GiaTienNhap]"
+                        name="ThuocData[0][GiaTienNhap]"
                         class="form-control"
                         placeholder="Giá nhập"
                         required
                       />
                       <input
                         type="number"
-                        name="Thuoc[0][SoLuong]"
+                        name="ThuocData[0][SoLuong]"
                         class="form-control"
                         placeholder="Số lượng"
                         required
                       />
                       <input
                         type="date"
-                        name="Thuoc[0][NgaySanXuat]"
+                        name="ThuocData[0][NgaySanXuat]"
                         class="form-control"
                         required
                       />
                       <input
                         type="date"
-                        name="Thuoc[0][HanSuDung]"
+                        name="ThuocData[0][HanSuDung]"
                         class="form-control"
                         required
                       />
@@ -236,131 +236,200 @@
         // Hàm tính tổng tiền
         const calculateTotal = () => {
           let total = 0;
-          const medicines = document.querySelectorAll('[name^="Thuoc["]');
-          medicines.forEach((medicine) => {
-            if (
-              medicine.name.includes("GiaTienNhap") ||
-              medicine.name.includes("SoLuong")
-            ) {
-              let giaNhap =
-                parseFloat(
-                  document.querySelector(
-                    `[name="${medicine.name.replace(
-                      "GiaTienNhap",
-                      "GiaTienNhap"
-                    )}"]`
-                  )?.value
-                ) || 0;
-              let soLuong =
-                parseInt(
-                  document.querySelector(
-                    `[name="${medicine.name.replace("SoLuong", "SoLuong")}"]`
-                  )?.value
-                ) || 0;
-              total += giaNhap * soLuong;
-            }
+          const medicines = document.querySelectorAll("#medicines > div");
+
+          medicines.forEach((medicineDiv) => {
+            const giaNhapInput = medicineDiv.querySelector(
+              '[name$="[GiaTienNhap]"]'
+            );
+            const soLuongInput = medicineDiv.querySelector(
+              '[name$="[SoLuong]"]'
+            );
+
+            const giaNhap = parseFloat(giaNhapInput?.value || 0);
+            const soLuong = parseFloat(soLuongInput?.value || 0);
+
+            total += giaNhap * soLuong;
           });
-          document.querySelector('[name="TongTien"]').value = total;
+
+          document.querySelector('[name="TongTien"]').value = total.toFixed(2);
         };
 
-        // Thêm thuốc mới
-        document
-          .getElementById("addMedicineBtn")
-          .addEventListener("click", () => {
-            const medicinesContainer = document.getElementById("medicines");
-            const newMedicine = document.createElement("div");
-            newMedicine.classList.add("mb-3");
-
-            newMedicine.innerHTML = `
-              <label for="thuoc${medicineCount}" class="form-label">Thuốc ${
-              medicineCount + 1
-            }</label>
-              <input
-                type="text"
-                name="Thuoc[${medicineCount}][TenThuoc]"
-                class="form-control"
-                placeholder="Tên thuốc"
-                required
-              />
-              <input
-                type="number"
-                name="Thuoc[${medicineCount}][GiaTienNhap]"
-                class="form-control"
-                placeholder="Giá nhập"
-                required
-              />
-              <input
-                type="number"
-                name="Thuoc[${medicineCount}][SoLuong]"
-                class="form-control"
-                placeholder="Số lượng"
-                required
-              />
-              <input
-                type="date"
-                name="Thuoc[${medicineCount}][NgaySanXuat]"
-                class="form-control"
-                required
-              />
-              <input
-                type="date"
-                name="Thuoc[${medicineCount}][HanSuDung]"
-                class="form-control"
-                required
-              />
-              <button type="button" class="btn btn-danger removeMedicineBtn">Xóa Thuốc</button>
-            `;
-            medicinesContainer.appendChild(newMedicine);
-            medicineCount++;
-
-            // Tính tổng tiền
-            calculateTotal();
+        // Hàm cập nhật thứ tự thuốc
+        const updateMedicineOrder = () => {
+          const medicines = document.querySelectorAll("#medicines .mb-3");
+          medicines.forEach((medicine, index) => {
+            const labels = medicine.querySelectorAll("label");
+            labels.forEach((label) => {
+              label.textContent = `Thuốc ${index + 1}`;
+            });
+            const inputs = medicine.querySelectorAll("input");
+            inputs.forEach((input) => {
+              input.name = input.name.replace(
+                /\[Thuoc\[\d+\]\]/,
+                `Thuoc[${index}]`
+              );
+            });
           });
+          medicineCount = medicines.length;
+        };
 
         // Xóa thuốc
-        document.addEventListener("click", (e) => {
-          if (e.target && e.target.classList.contains("removeMedicineBtn")) {
-            const medicineDiv = e.target.closest(".mb-3");
-            medicineDiv.remove();
-            // Tính lại tổng tiền sau khi xóa
+        document.querySelector("#medicines").addEventListener("click", (e) => {
+          if (e.target.classList.contains("removeMedicineBtn")) {
+            e.target.closest(".mb-3").remove();
+            updateMedicineOrder();
             calculateTotal();
           }
         });
 
-        // Tính toán tổng tiền khi người dùng nhập thông tin
+        // Thêm thuốc
         document
-          .getElementById("addLoThuocForm")
-          .addEventListener("input", calculateTotal);
+          .querySelector("#addMedicineBtn")
+          .addEventListener("click", () => {
+            medicineCount++;
+            const template = `
+      <div class="mb-3" id="medicine${medicineCount}">
+        <label for="thuoc${medicineCount}" class="form-label">Thuốc ${medicineCount}</label>
+        <input
+          type="text"
+          name="ThuocData[${medicineCount - 1}][TenThuoc]"
+          class="form-control"
+          placeholder="Tên thuốc"
+          required
+        />
+        <input
+          type="number"
+          name="ThuocData[${medicineCount - 1}][GiaTienNhap]"
+          class="form-control"
+          placeholder="Giá nhập"
+          required
+        />
+        <input
+          type="number"
+          name="ThuocData[${medicineCount - 1}][SoLuong]"
+          class="form-control"
+          placeholder="Số lượng"
+          required
+        />
+        <input
+          type="date"
+          name="ThuocData[${medicineCount - 1}][NgaySanXuat]"
+          class="form-control"
+          required
+        />
+        <input
+          type="date"
+          name="ThuocData[${medicineCount - 1}][HanSuDung]"
+          class="form-control"
+          required
+        />
+        <button type="button" class="btn btn-danger removeMedicineBtn">Xóa Thuốc</button>
+      </div>`;
+            document
+              .querySelector("#medicines")
+              .insertAdjacentHTML("beforeend", template);
+          });
 
-        // Xử lý thêm Lô Thuốc
+        // Cập nhật tổng tiền khi giá hoặc số lượng thay đổi
+        document.querySelector("#medicines").addEventListener("input", (e) => {
+          if (
+            e.target.name.includes("GiaTienNhap") ||
+            e.target.name.includes("SoLuong")
+          ) {
+            calculateTotal();
+          }
+        });
+
+        // Lưu form
         document
-          .getElementById("addLoThuocForm")
-          .addEventListener("submit", (event) => {
-            event.preventDefault();
+          .querySelector("#addLoThuocForm")
+          .addEventListener("submit", async (event) => {
+            event.preventDefault(); // Ngăn chặn reload trang khi submit form
+
             const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
-            console.log("Adding Lo Thuoc:", data);
+            const data = Object.fromEntries(formData.entries());
 
-            fetch("/lothuoc/", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
-            })
-              .then((response) => response.json())
-              .then((result) => {
-                console.log("Add Lo Thuoc response:", result);
-                if (result.success) {
-                  alert("Thêm Lô Thuốc thành công");
-                  location.reload(); // Tải lại trang để cập nhật danh sách lô thuốc
-                } else {
-                  alert(result.message);
-                }
-              })
-              .catch((error) => {
-                console.error("Error:", error);
+            // Tạo mảng thuốc từ dữ liệu trong form
+            data.ThuocData = [];
+            const medicineDivs = document.querySelectorAll("#medicines > div");
+
+            medicineDivs.forEach((medicineDiv, index) => {
+              const thuoc = {
+                TenThuoc: formData.get(`ThuocData[${index}][TenThuoc]`),
+                GiaTienNhap: Number(
+                  formData.get(`ThuocData[${index}][GiaTienNhap]`)
+                ),
+                SoLuong: Number(formData.get(`ThuocData[${index}][SoLuong]`)),
+                NgaySanXuat: formData.get(`ThuocData[${index}][NgaySanXuat]`),
+                HanSuDung: formData.get(`ThuocData[${index}][HanSuDung]`),
+              };
+
+              // Kiểm tra nếu thuốc hợp lệ trước khi thêm vào mảng
+              if (
+                thuoc.TenThuoc &&
+                thuoc.GiaTienNhap &&
+                thuoc.SoLuong &&
+                thuoc.NgaySanXuat &&
+                thuoc.HanSuDung
+              ) {
+                data.ThuocData.push(thuoc); // Đảm bảo đây là mảng
+              } else {
+                console.error(`Thuốc ${index + 1} không hợp lệ:`, thuoc);
+              }
+            });
+
+            // Kiểm tra dữ liệu NgayNhap
+            if (!data.NgayNhap) {
+              alert("Vui lòng nhập ngày nhập!");
+              return;
+            }
+
+            // Kiểm tra tổng tiền
+            if (isNaN(data.TongTien) || data.TongTien <= 0) {
+              alert("Tổng tiền không hợp lệ!");
+              return;
+            }
+
+            // Chuyển tổng tiền thành số nếu chưa
+            data.TongTien = Number(data.TongTien);
+
+            // Log dữ liệu chuẩn bị gửi đi
+            console.log("Ngày nhập:", data.NgayNhap);
+            console.log("Tổng tiền:", data.TongTien);
+            data.ThuocData.forEach((thuoc, index) => {
+              console.log(`Thuốc ${index + 1}:`, thuoc);
+            });
+
+            console.log(
+              "Dữ liệu chuẩn bị gửi đi:",
+              JSON.stringify(data, null, 2)
+            );
+
+            // Gửi dữ liệu đến server qua fetch
+            try {
+              const response = await fetch("/thuoclo/lothuoc", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
               });
+
+              const responseData = await response.json();
+              console.log("Phản hồi từ server:", responseData);
+
+              // Kiểm tra phản hồi từ server
+              if (response.ok && responseData.success) {
+                alert("Lưu thành công!");
+                location.reload(); // Tải lại trang nếu lưu thành công
+              } else {
+                alert("Đã xảy ra lỗi khi lưu: " + responseData.message);
+              }
+            } catch (error) {
+              console.error("Lỗi:", error);
+              alert("Không thể kết nối đến server!");
+            }
           });
       });
     </script>

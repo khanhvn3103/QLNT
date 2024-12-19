@@ -11,7 +11,4 @@ router.get("/lothuoc", ThuocController.getListLoThuoc);
 // Route để thêm một lô thuốc mới
 router.post("/lothuoc", ThuocController.createLoThuoc);
 
-// Route để lấy chi tiết thông tin lô thuốc theo ID
-router.get("/lothuoc/:LoThuocID", ThuocController.getLoThuocDetails);
-
 module.exports = router;

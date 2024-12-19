@@ -23,7 +23,7 @@ CREATE TABLE `lothuoc` (
 
 -- Tạo bảng `thuoc`
 CREATE TABLE `thuoc` (
-  `ThuocID` int NOT NULL,
+  `ThuocID` int NOT NULL AUTO_INCREMENT,
   `LoThuocID` int NOT NULL,
   `HanSuDung` date NOT NULL,
   `SoLuong` int NOT NULL,
