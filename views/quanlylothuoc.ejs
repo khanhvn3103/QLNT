@@ -90,7 +90,6 @@
           </table>
         </div>
 
-        <!-- Modal Thêm Lô Thuốc -->
         <div
           class="modal fade"
           id="addModal"
@@ -191,7 +190,6 @@
       </main>
     </div>
 
-    <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 
@@ -337,7 +335,7 @@
                 thuoc.NgaySanXuat &&
                 thuoc.HanSuDung
               ) {
-                data.ThuocData.push(thuoc); // Đảm bảo đây là mảng
+                data.ThuocData.push(thuoc);
               } else {
                 console.error(`Thuốc ${index + 1} không hợp lệ:`, thuoc);
               }
@@ -386,7 +384,7 @@
               // Kiểm tra phản hồi từ server
               if (response.ok && responseData.success) {
                 alert("Lưu thành công!");
-                location.reload(); // Tải lại trang nếu lưu thành công
+                location.reload();
               } else {
                 alert("Đã xảy ra lỗi khi lưu: " + responseData.message);
               }

@@ -24,9 +24,9 @@ MaGiamGia.init(
   },
   {
     sequelize,
-    modelName: "MaGiamGia", // Tên của model
-    tableName: "magiamgia", // Tên của bảng trong cơ sở dữ liệu
-    timestamps: false, // Không sử dụng timestamps (createdAt và updatedAt)
+    modelName: "MaGiamGia",
+    tableName: "magiamgia",
+    timestamps: false,
   }
 );
 module.exports = { MaGiamGia };

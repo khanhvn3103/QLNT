@@ -20,9 +20,7 @@
 
   <body>
     <%- include('sidebar') %>
-    <!-- Bao gồm sidebar -->
 
-    <!-- Content Area -->
     <div class="content">
       <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -100,7 +98,6 @@
       </main>
     </div>
 
-    <!-- Modal -->
     <div
       class="modal fade"
       id="hoaDonModal"
@@ -137,15 +134,13 @@
       </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 
-    <!-- JavaScript để hiển thị modal và lấy chi tiết hóa đơn -->
     <script>
       function showHoaDonDetails(button) {
         const hoaDonID = button.getAttribute("data-id");
-        console.log(`Yêu cầu chi tiết hóa đơn với ID: ${hoaDonID}`); // Debug ID của hóa đơn
+        console.log(`Yêu cầu chi tiết hóa đơn với ID: ${hoaDonID}`);
 
         // Gửi yêu cầu Ajax để lấy chi tiết hóa đơn
         fetch(`/hoadon/chitiet/${hoaDonID}`)
@@ -153,14 +148,13 @@
             if (!response.ok) {
               throw new Error("Không thể truy cập dữ liệu hóa đơn");
             }
-            return response.json(); // Chuyển đổi phản hồi thành JSON
+            return response.json();
           })
           .then((data) => {
-            console.log("Dữ liệu nhận được từ server:", data); // Debug dữ liệu nhận được từ server
-
+            console.log("Dữ liệu nhận được từ server:", data);
             if (data.error) {
-              alert(data.error); // Hiển thị lỗi nếu không tìm thấy hóa đơn
-              console.error("Lỗi từ server:", data.error); // In lỗi ra console
+              alert(data.error);
+              console.error("Lỗi từ server:", data.error);
               return;
             }
 
@@ -183,7 +177,7 @@
         `;
 
             // Debug chi tiết hóa đơn
-            console.log("Chi tiết hóa đơn:", chiTietHD); // In chi tiết hóa đơn ra console
+            console.log("Chi tiết hóa đơn:", chiTietHD);
 
             // Hiển thị chi tiết hóa đơn
             const chiTietHTML = chiTietHD

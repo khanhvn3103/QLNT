@@ -20,9 +20,9 @@ KhachHang.init(
   },
   {
     sequelize,
-    modelName: "KhachHang", // Tên của model
-    tableName: "khachhang", // Tên của bảng trong cơ sở dữ liệu
-    timestamps: false, // Không sử dụng timestamps (createdAt và updatedAt)
+    modelName: "KhachHang",
+    tableName: "khachhang",
+    timestamps: false,
   }
 );
 module.exports = { KhachHang };

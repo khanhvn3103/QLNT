@@ -23,10 +23,10 @@ app.use(bodyParser.json());
 // Cấu hình session
 app.use(
   session({
-    secret: "your-secret-key", // Dùng một khóa bí mật mạnh mẽ
-    resave: false, // Không lưu lại session nếu không thay đổi
-    saveUninitialized: true, // Lưu session ngay cả khi chưa thay đổi
-    cookie: { secure: false }, // Chỉ dùng false khi đang phát triển (localhost)
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
   })
 );
 
@@ -40,9 +40,9 @@ app.use(express.static(path.join(__dirname, "public")));
 // Middleware kiểm tra đăng nhập
 const checkLogin = (req, res, next) => {
   if (!req.session.user) {
-    return res.redirect("/login"); // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+    return res.redirect("/login");
   }
-  next(); // Nếu đã đăng nhập, tiếp tục xử lý
+  next();
 };
 
 // Trang chủ kiểm tra đăng nhập

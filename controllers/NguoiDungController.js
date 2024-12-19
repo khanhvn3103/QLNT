@@ -28,7 +28,7 @@ const listUsers = (req, res) => {
 const getUserInfo = (req, res) => {
   const userID = req.params.TenTaiKhoan;
   NguoiDung.findByPk(userID, {
-    attributes: { exclude: ["MatKhau"] }, // Loại bỏ trường "MatKhau" trong kết quả trả về
+    attributes: { exclude: ["MatKhau"] },
   })
     .then((user) => {
       if (!user) {
@@ -110,7 +110,7 @@ const handleLogin = (req, res) => {
   NguoiDung.findOne({
     where: {
       TenTaiKhoan,
-      MatKhau, // Đối với mật khẩu bạn nên sử dụng cơ chế hash để bảo mật
+      MatKhau,
     },
   })
     .then((user) => {
@@ -156,7 +156,7 @@ const addUser = async (req, res) => {
   try {
     const newUser = await NguoiDung.create({
       TenTaiKhoan,
-      MatKhau, // Đối với mật khẩu bạn nên sử dụng cơ chế hash để bảo mật
+      MatKhau,
       Email,
       SoDienThoai,
       ChucVu,
@@ -193,7 +193,7 @@ const updateUser = async (req, res) => {
     }
 
     if (MatKhau) {
-      user.MatKhau = MatKhau; // Chỉ cập nhật mật khẩu nếu có giá trị mới
+      user.MatKhau = MatKhau;
     }
     user.Email = Email;
     user.SoDienThoai = SoDienThoai;
@@ -234,7 +234,7 @@ const deleteUser = async (req, res) => {
         .json({ success: false, message: "Người dùng không tồn tại" });
     }
   } catch (error) {
-    console.error("Error during user deletion:", error.message); // In ra lỗi chi tiết
+    console.error("Error during user deletion:", error.message);
     res.status(500).json({
       success: false,
       message: "Lỗi server khi xóa người dùng",

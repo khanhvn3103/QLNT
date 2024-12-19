@@ -28,10 +28,10 @@ const createLoThuoc = async (req, res) => {
     for (let i = 0; i < ThuocData.length; i++) {
       // Sử dụng ThuocData để chuẩn bị dữ liệu thuốc
       const thuocData = {
-        LoThuocID: loThuoc.LoThuocID, // Gán LoThuocID mới cho thuốc
+        LoThuocID: loThuoc.LoThuocID,
         TenThuoc: ThuocData[i].TenThuoc,
         GiaTienNhap: ThuocData[i].GiaTienNhap,
-        GiaTienBan: ThuocData[i].GiaTienNhap + 5, // Tính giá bán
+        GiaTienBan: ThuocData[i].GiaTienNhap + 5,
         SoLuong: ThuocData[i].SoLuong,
         NgaySanXuat: ThuocData[i].NgaySanXuat,
         HanSuDung: ThuocData[i].HanSuDung,
@@ -40,7 +40,7 @@ const createLoThuoc = async (req, res) => {
       // Kiểm tra nếu thuốc đã tồn tại trong bảng Thuoc
       const existingThuoc = await Thuoc.findOne({
         where: {
-          TenThuoc: ThuocData[i].TenThuoc, // Kiểm tra thuốc theo tên
+          TenThuoc: ThuocData[i].TenThuoc,
         },
       });
 
@@ -48,7 +48,7 @@ const createLoThuoc = async (req, res) => {
         // Nếu thuốc đã tồn tại, tạo một bản sao mới của thuốc với LoThuocID mới
         await Thuoc.create({
           ...thuocData,
-          ThuocID: existingThuoc.ThuocID, // Giữ lại ThuocID cũ
+          ThuocID: existingThuoc.ThuocID,
         });
         console.log(
           `Thuốc ${ThuocData[i].TenThuoc} đã được tạo bản sao mới với LoThuocID ${loThuoc.LoThuocID}.`
@@ -76,7 +76,7 @@ const createLoThuoc = async (req, res) => {
 const getCanhBaoHanSuDung = async (req, res) => {
   const currentDate = new Date();
   const warningDate = new Date();
-  warningDate.setMonth(warningDate.getMonth() + 6); // Cảnh báo trước 6 tháng
+  warningDate.setMonth(warningDate.getMonth() + 6);
 
   try {
     const thuocDaHetHan = await Thuoc.findAll({

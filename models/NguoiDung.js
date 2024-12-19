@@ -38,9 +38,9 @@ NguoiDung.init(
   },
   {
     sequelize,
-    modelName: "NguoiDung", // Tên của model
-    tableName: "nguoidung", // Tên của bảng trong cơ sở dữ liệu
-    timestamps: false, // Không sử dụng timestamps (createdAt và updatedAt)
+    modelName: "NguoiDung",
+    tableName: "nguoidung",
+    timestamps: false,
   }
 );
 module.exports = { NguoiDung };
