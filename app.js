@@ -13,7 +13,7 @@ const canhBaoRoutes = require("./routes/CanhBaoRoutes");
 const maGiamGiaRoutes = require("./routes/MaGiamGiaRoutes");
 const hoaDonRoutes = require("./routes/HoaDonRoutes");
 const khachHangRoutes = require("./routes/KhachHangRoutes");
-// const banHangRoutes = require("./routes/BanHangRoutes");
+const banHangRoutes = require("./routes/BanHangRoutes");
 
 // Middleware cho bodyParser
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -53,7 +53,7 @@ app.use("/canhbao", canhBaoRoutes);
 app.use("/magiamgia", maGiamGiaRoutes);
 app.use("/hoadon", hoaDonRoutes);
 app.use("/khachhang", khachHangRoutes);
-// app.use("/banhang", banHangRoutes);
+app.use("/banhang", banHangRoutes);
 
 // Middleware xử lý lỗi 404 (tùy chọn)
 app.use((req, res, next) => {

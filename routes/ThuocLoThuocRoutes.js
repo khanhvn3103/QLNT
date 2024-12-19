@@ -3,7 +3,7 @@ const router = express.Router();
 const ThuocController = require("../controllers/ThuocController");
 
 // Routes cho thuốc
-router.get("/", ThuocController.listhuoc); // Lấy tất cả thuốc
+router.get("/", ThuocController.listthuoc); // Lấy tất cả thuốc
 
 // Route để lấy danh sách các lô thuốc
 router.get("/lothuoc", ThuocController.getListLoThuoc);

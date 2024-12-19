@@ -17,6 +17,7 @@ Thuoc.init(
         model: LoThuoc, // Tham chiếu tới model LoThuoc
         key: "LoThuocID", // Khóa chính của model LoThuoc
       },
+      primaryKey: true,
       allowNull: false, // Không cho phép giá trị NULL
     },
     HanSuDung: {

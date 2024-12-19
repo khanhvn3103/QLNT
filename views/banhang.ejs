@@ -14,91 +14,16 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
       rel="stylesheet"
     />
-    <!-- Line Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
-    />
-    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
     <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-brand">
-        <h1><span class="lab la-accusoft"></span> Medicine</h1>
-      </div>
-      <div class="sidebar-menu">
-        <ul>
-          <li>
-            <a href="#">
-              <span class="icon"
-                ><i class="fa-solid fa-business-time"></i
-              ></span>
-              <span>Cảnh báo hạn sử dụng</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="icon"><i class="fa-solid fa-user"></i></span>
-              <span>Quản lý người dùng</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="icon"
-                ><i class="fa-solid fa-parachute-box"></i
-              ></span>
-              <span>Quản lý lô thuốc</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="icon"><i class="fa-solid fa-tablets"></i></span>
-              <span>Quản lý thuốc</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="icon"
-                ><i class="fa-regular fa-money-bill-1"></i
-              ></span>
-              <span>Quản lý hóa đơn</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="icon"><i class="fa-solid fa-users"></i></span>
-              <span>Quản lý khách hàng</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
+    <%- include('sidebar')%>
     <!-- Content Area -->
     <div class="content">
       <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container-fluid">
             <a class="navbar-brand" href="#">Quản lý bán hàng</a>
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                  <button class="btn btn-exit" type="button">Đăng xuất</button>
-                </li>
-              </ul>
-            </div>
           </div>
         </nav>
       </header>
@@ -117,47 +42,34 @@
                       <tr>
                         <th>STT</th>
                         <th>Tên Thuốc</th>
-                        <th>Tên Lô</th>
                         <th>Số Lượng</th>
                         <th>Hạn Sử Dụng</th>
+                        <th>Giá Bán</th>
+                        <th>Chọn</th>
                       </tr>
                     </thead>
                     <tbody>
+                      <% thuoc.forEach((item, index) => { %>
                       <tr>
-                        <td>1</td>
-                        <td>Paracetamol</td>
-                        <td>Lô 101</td>
-                        <td>1000</td>
-                        <td>31/12/2025</td>
+                        <td><%= index + 1 %></td>
+                        <td><%= item.TenThuoc %></td>
+                        <td><%= item.SoLuong %></td>
+                        <td><%= item.HanSuDung %></td>
+                        <td><%= item.GiaTienBan %> VND</td>
+                        <td>
+                          <button
+                            class="btn btn-sm btn-primary add-to-cart"
+                            data-id="<%= item.ThuocID %>"
+                            data-loid="<%= item.LoThuocID %>"
+                            data-name="<%= item.TenThuoc %>"
+                            data-price="<%= item.GiaTienBan %>"
+                            data-quantity="<%= item.SoLuong %>"
+                          >
+                            Chọn
+                          </button>
+                        </td>
                       </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Aspirin</td>
-                        <td>Lô 102</td>
-                        <td>500</td>
-                        <td>30/11/2024</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Ibuprofen</td>
-                        <td>Lô 103</td>
-                        <td>750</td>
-                        <td>15/10/2023</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>Amoxicillin</td>
-                        <td>Lô 104</td>
-                        <td>200</td>
-                        <td>01/01/2024</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>Ciprofloxacin</td>
-                        <td>Lô 105</td>
-                        <td>300</td>
-                        <td>12/12/2025</td>
-                      </tr>
+                      <% }); %>
                     </tbody>
                   </table>
                 </div>
@@ -169,14 +81,16 @@
                   Thông Tin Người Dùng
                 </div>
                 <div class="card-body">
-                  <form class="tt-nguoidung">
+                  <form id="hoadon" class="tt-nguoidung">
                     <div class="mb-3">
                       <label for="name" class="form-label">Tên</label>
                       <input
                         type="text"
                         class="form-control"
                         id="name"
+                        name="HoTen"
                         placeholder="Tên người dùng"
+                        required
                       />
                     </div>
                     <div class="mb-3">
@@ -185,7 +99,9 @@
                         type="text"
                         class="form-control"
                         id="phone"
+                        name="SoDienThoai"
                         placeholder="Số điện thoại"
+                        required
                       />
                     </div>
                     <div class="mb-3">
@@ -194,7 +110,9 @@
                         type="text"
                         class="form-control"
                         id="points"
-                        placeholder="Điểm"
+                        name="Diem"
+                        value="0"
+                        disabled
                       />
                     </div>
                     <div class="mb-3 thuocdamua-table">
@@ -206,34 +124,38 @@
                           <tr>
                             <th>Tên Thuốc</th>
                             <th>Số Lượng</th>
+                            <th>Giá Bán</th>
+                            <th>Thành Tiền</th>
+                            <th></th>
                           </tr>
                         </thead>
-                        <tbody>
-                          <tr>
-                            <td>Paracetamol</td>
-                            <td>2</td>
-                          </tr>
-                          <tr>
-                            <td>Ibuprofen</td>
-                            <td>3</td>
-                          </tr>
-                          <!-- Thêm các hàng thuốc khác nếu cần -->
-                        </tbody>
+                        <tbody id="cart"></tbody>
                       </table>
                     </div>
                     <div class="mb-3">
-                      <label for="discount-code" class="form-label"
+                      <label for="voucher" class="form-label"
                         >Mã giảm giá</label
                       >
                       <input
                         type="text"
                         class="form-control"
-                        id="discount-code"
+                        id="voucher"
+                        name="MaGiamGiaID"
                         placeholder="Mã giảm giá"
                       />
                     </div>
+                    <div class="mb-3">
+                      <label for="total" class="form-label">Tổng tiền</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="total"
+                        name="TongTien"
+                        disabled
+                      />
+                    </div>
                     <button type="submit" class="btn btn-primary">
-                      Cập nhật
+                      Xác Nhận
                     </button>
                   </form>
                 </div>
@@ -244,8 +166,212 @@
       </main>
     </div>
 
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script>
+      let giamGia = 0;
+      document
+        .getElementById("voucher")
+        .addEventListener("change", async function () {
+          const voucher = this.value.trim();
+
+          if (voucher) {
+            try {
+              // Gửi yêu cầu đến API để tìm kiếm khách hàng
+              const response = await fetch(`/banhang/voucher/${voucher}`);
+              const data = await response.json();
+
+              if (response.ok && data.success) {
+                const today = new Date();
+                const beginAt = new Date(data.MaGiamGias.beginAt);
+                const endAt = new Date(data.MaGiamGias.endAt);
+
+                if (endAt > today && today > beginAt) {
+                  giamGia = data.MaGiamGias.GiamGia;
+                }
+              } else {
+                giamGia = 0;
+              }
+            } catch (error) {
+              // Xử lý lỗi khi gọi API
+              console.error("Lỗi khi tìm kiếm mã giảm giá:", error);
+              alert(
+                "Đã xảy ra lỗi khi tìm kiếm mã giảm giá. Vui lòng thử lại sau."
+              );
+            }
+          } else {
+            giamGia = 0;
+          }
+          updateCart();
+        });
+
+      // Xử lý sự kiện khi người dùng nhập số điện thoại
+      document
+        .getElementById("phone")
+        .addEventListener("change", async function () {
+          const phone = this.value.trim(); // Loại bỏ khoảng trắng
+
+          if (phone) {
+            try {
+              // Gửi yêu cầu đến API để tìm kiếm khách hàng
+              const response = await fetch(`/banhang/khachhang/${phone}`);
+              const data = await response.json();
+
+              if (response.ok && data.success) {
+                // Cập nhật thông tin khách hàng
+                document.getElementById("name").value =
+                  data.khachHang.HoTen || "";
+                document.getElementById("points").value =
+                  data.khachHang.Diem || 0;
+              } else {
+                // Xử lý khi không tìm thấy khách hàng
+                document.getElementById("name").value = "";
+                document.getElementById("points").value = 0;
+              }
+            } catch (error) {
+              // Xử lý lỗi khi gọi API
+              console.error("Lỗi khi tìm kiếm khách hàng:", error);
+              alert(
+                "Đã xảy ra lỗi khi tìm kiếm khách hàng. Vui lòng thử lại sau."
+              );
+            }
+          } else {
+            // Khi số điện thoại trống
+            document.getElementById("name").value = "";
+            document.getElementById("points").value = 0;
+          }
+        });
+
+      // Thêm thuốc vào giỏ hàng
+      document.addEventListener("click", function (e) {
+        if (e.target && e.target.classList.contains("add-to-cart")) {
+          const drug = {
+            id: e.target.getAttribute("data-id"),
+            loid: e.target.getAttribute("data-loid"),
+            name: e.target.getAttribute("data-name"),
+            quantitys: e.target.getAttribute("data-quantity"),
+            price: e.target.getAttribute("data-price"),
+            quantity: 1,
+          };
+
+          let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+          // Kiểm tra nếu thuốc đã có trong giỏ, tăng số lượng
+          const existingDrugIndex = cart.findIndex(
+            (item) => item.id === drug.id && item.loid === drug.loid
+          );
+          if (existingDrugIndex !== -1) {
+            if (cart[existingDrugIndex].quantity + 1 <= drug.quantitys) {
+              cart[existingDrugIndex].quantity++;
+            } else {
+              alert("Số lượng thuốc không đủ");
+            }
+          } else {
+            cart.push(drug);
+          }
+
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCart();
+        }
+      });
+
+      function updateCart() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const cartTable = document.querySelector("#cart"); // Đảm bảo bạn đã chọn đúng tbody
+        cartTable.innerHTML = "";
+
+        let total = 0;
+        cart.forEach((item, index) => {
+          total += item.price * item.quantity;
+          const row = document.createElement("tr");
+          row.innerHTML = `
+        <td>${item.name}</td>
+        <td>
+          <button class="btn btn-sm btn-warning decrease" data-index="${index}">-1</button>
+          ${item.quantity}
+          <button class="btn btn-sm btn-success increase" data-index="${index}">+1</button>
+        </td>
+        <td>${item.price} VND</td>
+        <td>${item.price * item.quantity} VND</td>
+        <td><button class="btn btn-sm btn-danger remove" data-index="${index}">Xóa</button></td>
+      `;
+          cartTable.appendChild(row);
+        });
+
+        // Cập nhật tổng tiền
+        const totalWithDiscount = total - (total / 100) * giamGia;
+
+        document.getElementById("total").value = totalWithDiscount;
+      }
+
+      // Thêm sự kiện cho các nút điều chỉnh số lượng và xóa
+      document.addEventListener("click", function (e) {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        // Khi người dùng nhấn vào nút giảm số lượng
+        if (e.target && e.target.classList.contains("decrease")) {
+          const index = e.target.getAttribute("data-index");
+          if (cart[index].quantity > 1) {
+            cart[index].quantity--;
+          } else {
+            cart.splice(index, 1);
+          }
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCart();
+        }
+
+        // Khi người dùng nhấn vào nút tăng số lượng
+        if (e.target && e.target.classList.contains("increase")) {
+          const index = e.target.getAttribute("data-index");
+          const drug = cart[index];
+
+          if (drug.quantity < drug.quantitys) {
+            drug.quantity++; // Tăng số lượng nếu còn số lượng sản phẩm trong kho
+          } else {
+            alert("Số lượng thuốc không đủ"); // Thông báo khi vượt quá số lượng có sẵn
+          }
+
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCart();
+        }
+        // Khi người dùng nhấn vào nút xóa thuốc khỏi giỏ hàng
+        if (e.target && e.target.classList.contains("remove")) {
+          const index = e.target.getAttribute("data-index");
+          cart.splice(index, 1); // Xóa thuốc khỏi giỏ hàng
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCart();
+        }
+      });
+      updateCart();
+      document
+        .getElementById("hoadon")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          // Lấy giá trị từ form
+          const formData = new FormData(event.target);
+          const data = Object.fromEntries(formData.entries());
+
+          // Lấy giá trị tổng tiền từ input "total" và điểm từ input "points"
+          const total = document.getElementById("total").value.trim(); // Lấy tổng tiền từ form
+          const diem = document.getElementById("points").value.trim(); // Lấy điểm từ form
+
+          // Cập nhật thông tin vào đối tượng data
+          data.TongTien = total; // Thêm tổng tiền vào dữ liệu
+          data.Diem = diem; // Thêm điểm vào dữ liệu
+          const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+          // Thêm thông tin giỏ hàng vào dữ liệu
+          data.cart = cart;
+          console.log(data); // In ra dữ liệu đã lấy từ form
+
+          // Gửi dữ liệu lên server (ví dụ bằng fetch)
+          const response = await fetch("/banhang", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+        });
+    </script>
   </body>
 </html>

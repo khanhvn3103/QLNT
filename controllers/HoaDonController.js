@@ -1,7 +1,8 @@
 const { HoaDon } = require("../models/HoaDon");
 const { ChiTietHD } = require("../models/ChiTietHD");
 const { Thuoc } = require("../models/Thuoc");
-const { Op } = require("sequelize");
+const { KhachHang } = require("../models/KhachHang");
+const { Op, DATE } = require("sequelize");
 const sequelize = require("../config/sequelize/index");
 
 const listHoaDon = async (req, res) => {
@@ -61,7 +62,105 @@ const getChiTietHoaDon = async (req, res) => {
   }
 };
 
+const saveOrder = async (req, res) => {
+  const { Diem, HoTen, MaGiamGiaID, SoDienThoai, TongTien, cart } = req.body;
+  let today = new Date(); // sửa lại để tạo đối tượng Date hợp lệ
+  try {
+    // Kiểm tra xem khách hàng đã tồn tại chưa
+    let khachhang = await KhachHang.findByPk(SoDienThoai);
+
+    // Nếu khách hàng tồn tại
+    if (khachhang) {
+      // Cập nhật điểm
+      khachhang.Diem += TongTien / 1000;
+      await khachhang.save(); // Lưu lại thay đổi điểm khách hàng
+    } else {
+      // Nếu khách hàng không tồn tại, tạo mới
+      khachhang = await KhachHang.create({
+        SoDienThoai: SoDienThoai,
+        HoTen: HoTen,
+        Diem: parseInt(TongTien / 1000),
+      });
+    }
+
+    // Tạo hóa đơn mới
+    const newOrder = await HoaDon.create({
+      TenTaiKhoan: "admin",
+      NgayBan: today,
+      MaGiamGiaID: MaGiamGiaID || null,
+      SoDienThoai: SoDienThoai,
+      TongTien: parseFloat(TongTien),
+    });
+
+    // Tạo chi tiết hóa đơn cho từng mặt hàng trong giỏ
+    for (const item of cart) {
+      try {
+        // Kiểm tra nếu ChiTietHD với HoaDonID và ThuocID đã tồn tại
+        const existingDetail = await ChiTietHD.findOne({
+          where: {
+            HoaDonID: parseInt(newOrder.HoaDonID),
+            ThuocID: parseInt(item.id),
+          },
+        });
+
+        if (existingDetail) {
+          // Nếu đã tồn tại, cập nhật số lượng và đơn giá
+          existingDetail.SoLuong += parseInt(item.quantity); // Cộng thêm số lượng
+          existingDetail.DonGia = parseFloat(item.price); // Cập nhật đơn giá nếu cần
+          await existingDetail.save(); // Lưu lại thay đổi
+        } else {
+          // Nếu chưa tồn tại, tạo mới
+          const newChiTietHD = await ChiTietHD.create({
+            HoaDonID: parseInt(newOrder.HoaDonID),
+            ThuocID: parseInt(item.id),
+            SoLuong: parseInt(item.quantity),
+            DonGia: parseFloat(item.price),
+          });
+        }
+
+        // Sau khi tạo chi tiết hóa đơn, trừ số lượng thuốc trong kho
+        // Truy vấn thuốc với ThuocID và LoThuocID cụ thể
+        const thuoc = await Thuoc.findOne({
+          where: {
+            ThuocID: parseInt(item.id),
+            LoThuocID: parseInt(item.loid), // Lọc chính xác theo LoThuocID
+          },
+        });
+
+        if (thuoc) {
+          // Giảm số lượng thuốc
+          thuoc.SoLuong -= parseInt(item.quantity);
+          await thuoc.save(); // Lưu lại sự thay đổi
+        } else {
+          console.error("Thuốc không tồn tại với ThuocID và LoThuocID này");
+        }
+      } catch (error) {
+        console.error(
+          "Error creating or updating ChiTietHD or updating Thuoc:",
+          error.message
+        );
+        console.error("Validation errors:", error.errors); // In chi tiết lỗi validation
+      }
+    }
+
+    // Trả về kết quả thành công
+    res.status(201).json({
+      success: true,
+      data: newOrder,
+      message: "Thêm hóa đơn thành công",
+    });
+  } catch (error) {
+    console.error("Error during bill creation:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Thêm hóa đơn thất bại",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   listHoaDon,
   getChiTietHoaDon,
+  saveOrder,
 };

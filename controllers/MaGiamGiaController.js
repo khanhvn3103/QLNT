@@ -68,8 +68,30 @@ const deleteVoucher = async (req, res) => {
   }
 };
 
+const getVoucher = async (req, res) => {
+  try {
+    const MaGiamGiaID = req.params.voucher;
+    const MaGiamGias = await MaGiamGia.findOne({
+      where: { MaGiamGiaID: MaGiamGiaID },
+    });
+
+    if (MaGiamGias) {
+      return res.json({ success: true, MaGiamGias });
+    } else {
+      return res.json({
+        success: false,
+        message: "Mã giảm giá không tồn tại.",
+      });
+    }
+  } catch (error) {
+    console.error("Lỗi khi tìm kiếm mã giảm giá:", error);
+    res.status(500).json({ success: false, message: "Đã xảy ra lỗi." });
+  }
+};
+
 module.exports = {
   listVoucher,
   addVoucher,
   deleteVoucher,
+  getVoucher,
 };

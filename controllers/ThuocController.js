@@ -110,10 +110,19 @@ const getListLoThuoc = (req, res) => {
       res.render("quanlylothuoc", { error: err.message });
     });
 };
-// Hàm mới để lấy tất cả thuốc
-const listhuoc = async (req, res) => {
+
+const getAllThuoc = async () => {
   try {
-    const listhuoc = await Thuoc.findAll({
+    return await Thuoc.findAll();
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách thuốc:", error);
+    throw new Error("Không thể lấy danh sách thuốc");
+  }
+};
+
+const listthuoc = async (req, res) => {
+  try {
+    const listthuoc = await Thuoc.findAll({
       where: {
         SoLuong: {
           [Sequelize.Op.gt]: 0,
@@ -124,15 +133,15 @@ const listhuoc = async (req, res) => {
         ["HanSuDung", "ASC"],
       ],
     });
-    res.render("quanlythuoc", { listhuoc });
+    res.render("quanlythuoc", { listthuoc });
   } catch (err) {
     res.status(500).send(err.message);
   }
 };
-
 module.exports = {
   createLoThuoc,
   getCanhBaoHanSuDung,
   getListLoThuoc,
-  listhuoc,
+  getAllThuoc,
+  listthuoc,
 };
