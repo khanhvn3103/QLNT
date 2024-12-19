@@ -371,41 +371,50 @@
                 document.getElementById("editDiaChi").value = user.DiaChi;
                 document.getElementById("editChucVu").value = user.ChucVu;
 
-                document
-                  .getElementById("editUserForm")
-                  .addEventListener("submit", (event) => {
-                    const formData = new FormData(event.target);
-                    const data = Object.fromEntries(formData);
-                    console.log(data.password);
+                // Đảm bảo form sửa chỉ được đăng ký sự kiện submit một lần
+                const editForm = document.getElementById("editUserForm");
+                const currentSubmitHandler = editForm.querySelector(
+                  "button[type='submit']"
+                );
 
-                    // Kiểm tra xem trường mật khẩu có bị để trống không
-                    if (!data.password) {
-                      delete data.password; // Xóa trường mật khẩu nếu để trống
-                    }
+                // Gỡ bỏ sự kiện submit cũ nếu có
+                const oldSubmitHandler = editForm.onsubmit;
+                editForm.onsubmit = null;
 
-                    console.log("Updating user:", data);
+                // Đăng ký lại sự kiện submit form sửa
+                editForm.addEventListener("submit", function (event) {
+                  event.preventDefault(); // Ngừng gửi form mặc định
 
-                    fetch(`/nguoidung/${userId}`, {
-                      method: "PUT",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify(data),
+                  const formData = new FormData(event.target);
+                  const data = Object.fromEntries(formData);
+                  console.log("Updating user:", data);
+
+                  // Kiểm tra xem trường mật khẩu có bị để trống không
+                  if (!data.MatKhau) {
+                    delete data.MatKhau; // Xóa trường mật khẩu nếu để trống
+                  }
+
+                  fetch(`/nguoidung/${userId}`, {
+                    method: "PUT",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                  })
+                    .then((response) => response.json())
+                    .then((result) => {
+                      console.log("Update user response:", result);
+                      if (result.success) {
+                        alert("Sửa người dùng thành công");
+                        location.reload(); // Tải lại trang để cập nhật danh sách người dùng
+                      } else {
+                        alert(result.message);
+                      }
                     })
-                      .then((response) => response.json())
-                      .then((result) => {
-                        console.log("Update user response:", result);
-                        if (result.success) {
-                          alert("Sửa người dùng thành công");
-                          location.reload(); // Tải lại trang để cập nhật danh sách người dùng
-                        } else {
-                          alert(result.message);
-                        }
-                      })
-                      .catch((error) => {
-                        console.error("Error:", error);
-                      });
-                  });
+                    .catch((error) => {
+                      console.error("Error:", error);
+                    });
+                });
               } else {
                 alert(result.message);
               }

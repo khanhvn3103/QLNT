@@ -221,9 +221,6 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const { TenTaiKhoan } = req.params;
   try {
-    // Ngắt liên kết các hóa đơn với tài khoản người dùng trước khi xóa người dùng
-    await HoaDon.update({ TenTaiKhoan: null }, { where: { TenTaiKhoan } });
-
     // Xóa người dùng
     const result = await NguoiDung.destroy({ where: { TenTaiKhoan } });
 
