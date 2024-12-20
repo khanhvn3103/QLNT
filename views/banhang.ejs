@@ -214,13 +214,13 @@
               }
             } catch (error) {
               // Xử lý lỗi khi gọi API
-              console.error("Lỗi khi tìm kiếm mã giảm giá:", error);
-              alert(
-                "Đã xảy ra lỗi khi tìm kiếm mã giảm giá. Vui lòng thử lại sau."
-              );
+              giamGia = 0;
+              updateCart();
+              this.value = "";
             }
           } else {
             giamGia = 0;
+            this.value = "";
           }
           updateCart();
         });
@@ -378,7 +378,10 @@
           data.TongTien = total;
           data.Diem = diem;
           const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
+          if (cart.length === 0) {
+            alert("Vui lòng chọn thuốc");
+            return;
+          }
           // Thêm thông tin giỏ hàng vào dữ liệu
           data.cart = cart;
           console.log(data);

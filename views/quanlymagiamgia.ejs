@@ -128,7 +128,7 @@
                       type="date"
                       name="beginAt"
                       class="form-control"
-                      id="medicineName"
+                      id="ngaybatdau"
                       required
                     />
                   </div>
@@ -140,7 +140,7 @@
                       type="date"
                       name="endAt"
                       class="form-control"
-                      id="medicineName"
+                      id="ngayketthuc"
                       required
                     />
                   </div>
@@ -152,7 +152,7 @@
                       type="number"
                       name="GiamGia"
                       class="form-control"
-                      id="medicineName"
+                      id="giatrigiam"
                       placeholder="Giá trị giảm(%)"
                       required
                     />
@@ -176,7 +176,22 @@
           .getElementById("addVoucherForm")
           .addEventListener("submit", (event) => {
             event.preventDefault(); // Ngăn hành vi mặc định của form
-
+            const batdau = new Date(
+              document.getElementById("ngaybatdau").value
+            );
+            const ketthuc = new Date(
+              document.getElementById("ngayketthuc").value
+            );
+            const sale = parseFloat(
+              document.getElementById("giatrigiam").value
+            );
+            const today = new Date();
+            if (today > ketthuc || sale <= 0 || batdau > ketthuc) {
+              alert(
+                "Nhập giá trị sai: Kiểm tra ngày bắt đầu, ngày kết thúc, hoặc giá trị giảm."
+              );
+              return;
+            }
             const formData = new FormData(event.target);
             const data = Object.fromEntries(formData.entries()); // Chuyển dữ liệu từ form thành object
 

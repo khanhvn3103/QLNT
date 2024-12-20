@@ -139,12 +139,16 @@ const logout = (req, res) => {
 
 // Hiển thị trang quản lý người dùng
 const showUserManagementPage = (req, res) => {
+  const loggedInUser = req.session.user;
   NguoiDung.findAll()
     .then((users) => {
-      res.render("quanlynguoidung", { users });
+      const filteredUsers = users.filter(
+        (user) => user.TenTaiKhoan !== loggedInUser.TenTaiKhoan
+      );
+      res.render("quanlynguoidung", { users: filteredUsers });
     })
     .catch((err) => {
-      res.render("quanlynguoidung", { error: err.message });
+      res.render("quanlynguoidung", { users: [], error: err.message });
     });
 };
 

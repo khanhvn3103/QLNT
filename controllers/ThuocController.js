@@ -31,7 +31,8 @@ const createLoThuoc = async (req, res) => {
         LoThuocID: loThuoc.LoThuocID,
         TenThuoc: ThuocData[i].TenThuoc,
         GiaTienNhap: ThuocData[i].GiaTienNhap,
-        GiaTienBan: ThuocData[i].GiaTienNhap + 5,
+        GiaTienBan:
+          ThuocData[i].GiaTienNhap + (ThuocData[i].GiaTienNhap / 100) * 5,
         SoLuong: ThuocData[i].SoLuong,
         NgaySanXuat: ThuocData[i].NgaySanXuat,
         HanSuDung: ThuocData[i].HanSuDung,
@@ -113,7 +114,21 @@ const getListLoThuoc = (req, res) => {
 
 const getAllThuoc = async () => {
   try {
-    return await Thuoc.findAll();
+    const currentDate = new Date();
+    return await Thuoc.findAll({
+      where: {
+        SoLuong: {
+          [Sequelize.Op.gt]: 0,
+        },
+        HanSuDung: {
+          [Op.gte]: currentDate,
+        },
+      },
+      order: [
+        ["TenThuoc", "ASC"],
+        ["HanSuDung", "ASC"],
+      ],
+    });
   } catch (error) {
     console.error("Lỗi khi lấy danh sách thuốc:", error);
     throw new Error("Không thể lấy danh sách thuốc");
@@ -122,10 +137,14 @@ const getAllThuoc = async () => {
 
 const listthuoc = async (req, res) => {
   try {
+    const currentDate = new Date();
     const listthuoc = await Thuoc.findAll({
       where: {
         SoLuong: {
           [Sequelize.Op.gt]: 0,
+        },
+        HanSuDung: {
+          [Op.gte]: currentDate,
         },
       },
       order: [

@@ -118,6 +118,7 @@
                       class="form-control"
                       required
                       value="<%= new Date().toISOString().split('T')[0] %>"
+                      disabled
                     />
                   </div>
                   <div class="mb-3">
@@ -310,6 +311,43 @@
           .querySelector("#addLoThuocForm")
           .addEventListener("submit", async (event) => {
             event.preventDefault();
+            const medicines = document.querySelectorAll("#medicines > div");
+            const today = new Date().toISOString().split("T")[0]; // Ngày hiện tại
+
+            for (const medicineDiv of medicines) {
+              const giaTienNhap = parseFloat(
+                medicineDiv.querySelector('[name$="[GiaTienNhap]"]').value
+              );
+              const soLuong = parseInt(
+                medicineDiv.querySelector('[name$="[SoLuong]"]').value
+              );
+              const ngaySanXuat = medicineDiv.querySelector(
+                '[name$="[NgaySanXuat]"]'
+              ).value;
+              const hanSuDung = medicineDiv.querySelector(
+                '[name$="[HanSuDung]"]'
+              ).value;
+
+              if (giaTienNhap <= 0 || soLuong <= 0) {
+                alert("Giá thuốc và số lượng thuốc phải lớn hơn 0.");
+                return;
+              }
+
+              if (hanSuDung <= today) {
+                alert("Hạn sử dụng phải lớn hơn ngày hiện tại.");
+                return;
+              }
+
+              if (ngaySanXuat >= hanSuDung) {
+                alert("Ngày sản xuất phải nhỏ hơn hạn sử dụng.");
+                return;
+              }
+
+              if (ngaySanXuat > today) {
+                alert("Ngày sản xuất không được lớn hơn hiện tại.");
+                return;
+              }
+            }
 
             try {
               const formData = new FormData(event.target);
@@ -341,7 +379,9 @@
                   data.ThuocData.push(thuoc);
                 }
               });
-
+              data.NgayNhap = new Date().toISOString().split("T")[0];
+              console.log("NgayNhap:" + data.NgayNhap);
+              console.log("TongTien:" + data.TongTien);
               if (
                 !data.NgayNhap ||
                 isNaN(data.TongTien) ||
